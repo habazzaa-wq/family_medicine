@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Sparkles } from "lucide-react";
 
 const PHRASES = [
   "صلى على النبي يا دكتورة",
@@ -48,11 +49,16 @@ export function BlessingToast() {
       aria-live="polite"
       dir="rtl"
       className={cnToast(
-        "fixed bottom-4 right-4 z-50 max-w-[min(90vw,22rem)] rounded-[16px] border border-line bg-bg-elevated/95 px-4 py-3 shadow-lg shadow-black/10 backdrop-blur-sm transition-all duration-300",
+        "fixed right-4 top-4 z-50 max-w-[min(92vw,24rem)] rounded-2xl border border-accent/50 bg-bg-elevated px-5 py-4 shadow-xl shadow-black/20 backdrop-blur-sm transition-all duration-300 sm:top-auto sm:bottom-4",
         visible ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
       )}
     >
-      <p className="text-sm font-medium leading-relaxed text-ink">{message}</p>
+      <div className="flex items-center gap-3">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+          <Sparkles className="size-5" />
+        </span>
+        <p className="text-[15px] font-semibold leading-relaxed text-ink">{message}</p>
+      </div>
     </div>
   );
 }
