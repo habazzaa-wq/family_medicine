@@ -1,0 +1,628 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MedBank • Cardio + Chest Exam 2</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#102033;--muted:#6b7a90;--line:#e5eaf1;--primary:#2563eb;--good:#16a34a;--bad:#dc2626;--goodbg:#ecfdf3;--badbg:#fef2f2;--shadow:0 18px 50px rgba(16,32,51,.10)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#eef5ff 0,#f5f7fb 40%,#f7f8fb 100%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+button{font:inherit}
+.app{max-width:1100px;margin:auto;padding:22px 16px 50px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#7c3aed,#2563eb);display:grid;place-items:center;color:#fff;font-weight:900;font-size:23px;box-shadow:0 10px 25px rgba(124,58,237,.25)}
+h1{font-size:20px;margin:0 0 3px}
+.sub{font-size:12px;color:var(--muted)}
+.pill{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-size:12px;color:var(--muted)}
+.hero,.quiz,.result{background:rgba(255,255,255,.94);border:1px solid rgba(229,234,241,.95);border-radius:24px;box-shadow:var(--shadow)}
+.hero{padding:34px 30px;margin-top:18px}
+.hero h2{font-size:34px;line-height:1.1;margin:0 0 10px}
+.hero p{color:var(--muted);max-width:680px;line-height:1.7}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.stat{padding:12px 15px;border:1px solid var(--line);border-radius:15px;background:#fafcff;min-width:110px}
+.stat b{display:block;font-size:19px}
+.stat span{font-size:11px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:0;border-radius:14px;padding:13px 18px;cursor:pointer;font-weight:800;transition:.2s}
+.btn.primary{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;box-shadow:0 10px 25px rgba(124,58,237,.2)}
+.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.quiz{padding:18px;display:none}
+.barrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.progress{height:9px;background:#edf1f6;border-radius:999px;overflow:hidden;flex:1}
+.progress>div{height:100%;background:linear-gradient(90deg,#7c3aed,#2563eb);width:0;transition:.25s}
+.counter{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+.qcard{border:1px solid var(--line);border-radius:20px;padding:25px;background:#fff}
+.topic{display:inline-flex;padding:6px 10px;border-radius:999px;background:#f3e8ff;color:#7c3aed;font-size:11px;font-weight:800;margin-bottom:13px}
+.qtext{font-size:22px;line-height:1.55;font-weight:800;margin:0 0 20px}
+.choices{display:grid;gap:11px}
+.choice{border:1.5px solid #dfe5ed;border-radius:16px;padding:15px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:.18s;background:#fff}
+.choice:hover{border-color:#c4b5fd;background:#faf5ff}
+.choice.selected{border-color:#7c3aed;background:#f5f3ff;box-shadow:0 0 0 3px rgba(124,58,237,.08)}
+.radio{width:22px;height:22px;border:2px solid #b8c2d1;border-radius:50%;flex:none;display:grid;place-items:center}
+.selected .radio{border-color:#7c3aed}
+.selected .radio:after{content:"";width:10px;height:10px;background:#7c3aed;border-radius:50%}
+.letter{width:25px;height:25px;border-radius:8px;background:#f0f3f8;display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
+.selected .letter{background:#ede9fe;color:#6d28d9}
+.choiceText{line-height:1.55;flex:1}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.nav .btn{min-width:120px}
+.timer{font-variant-numeric:tabular-nums;font-weight:900}
+.result{display:none;padding:30px}
+.score{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ringbox{position:relative;width:150px;height:150px}
+.ring{width:150px;height:150px;border-radius:50%;background:conic-gradient(#7c3aed var(--deg),#e8edf5 0);display:grid;place-items:center}
+.ring:after{content:"";width:116px;height:116px;border-radius:50%;background:#fff;position:absolute;left:17px;top:17px}
+.ringnum{position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-size:30px;font-weight:900}
+.result h2{font-size:30px;margin:0 0 5px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
+.metric{border:1px solid var(--line);border-radius:16px;padding:15px}
+.metric b{font-size:22px}
+.metric small{display:block;color:var(--muted);margin-top:3px}
+.review{margin-top:25px}
+.reviewItem{border:1px solid var(--line);border-radius:17px;padding:17px;margin:10px 0;background:#fff}
+.reviewItem.correct{border-color:#bbf7d0;background:var(--goodbg)}
+.reviewItem.wrong{border-color:#fecaca;background:var(--badbg)}
+.rmeta{font-size:11px;font-weight:900;color:var(--muted);margin-bottom:6px}
+.rstem{font-weight:800;line-height:1.5}
+.ranswer{margin-top:8px;font-size:13px}
+.green{color:var(--good);font-weight:800}
+.red{color:var(--bad);font-weight:800}
+.footnote{margin-top:16px;color:var(--muted);font-size:11px;line-height:1.6}
+.resumeBanner{display:none;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:16px;padding:14px 18px;margin-bottom:16px;font-size:14px;line-height:1.5}
+.resumeBanner strong{color:#6d28d9}
+@media(max-width:650px){.app{padding:12px 10px 35px}.hero{padding:24px 19px}.hero h2{font-size:27px}.qcard{padding:19px}.qtext{font-size:18px}.metrics{grid-template-columns:1fr}.nav .btn{min-width:0;flex:1}.top .pill{display:none}}
+.feedback{display:none;margin-top:18px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);line-height:1.6}
+.feedback.show{display:block}
+.feedback.good{background:var(--goodbg);border-color:#bbf7d0}
+.feedback.bad{background:var(--badbg);border-color:#fecaca}
+.feedbackTitle{font-weight:900;margin-bottom:4px}
+.feedbackAnswer{font-weight:800}
+.choice.correctChoice{background:var(--goodbg);border-color:#86efac}
+.choice.wrongChoice{background:var(--badbg);border-color:#fca5a5}
+.choice.correctChoice .radio{border-color:var(--good);background:var(--good)}
+.choice.wrongChoice .radio{border-color:var(--bad);background:var(--bad)}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <h1>MedBank</h1>
+        <div class="sub">Cardio + Chest • Exam Paper 2</div>
+      </div>
+    </div>
+    <div class="pill">20 MCQs</div>
+  </div>
+
+  <section id="home" class="hero">
+    <div class="topic">MEDICAL EXAM MODE</div>
+    <h2>Cardio + Chest — Exam 2</h2>
+    <p>20 multiple-choice questions extracted from the exam paper. Questions are shuffled every time. Progress is saved automatically — close the page and open the same link again to continue from where you left off.</p>
+    <div id="resumeBanner" class="resumeBanner"></div>
+    <div class="stats">
+      <div class="stat"><b>20</b><span>Questions</span></div>
+      <div class="stat"><b>∞</b><span>Attempts</span></div>
+      <div class="stat"><b>⏱</b><span>Timer</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="startBtn" onclick="startQuiz(false)">🚀 Start Exam</button>
+      <button class="btn secondary" onclick="startQuiz(true)">🔀 Fresh shuffle</button>
+      <button class="btn secondary" id="resumeBtn" style="display:none" onclick="resumeQuiz()">▶ Continue last attempt</button>
+    </div>
+    <div class="footnote">Answers based on the marked paper. Question 12 answer corrected to (B) Persistent respiratory symptoms as requested.</div>
+  </section>
+
+  <section id="quiz" class="quiz">
+    <div class="barrow">
+      <div class="timer" id="timer">00:00</div>
+      <div class="progress"><div id="progressFill"></div></div>
+      <div class="counter" id="counter">1 / 20</div>
+    </div>
+    <div class="qcard">
+      <div class="topic" id="qtopic">Cardio</div>
+      <h2 class="qtext" id="qtext"></h2>
+      <div class="choices" id="choices"></div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+    <div class="nav">
+      <button class="btn secondary" onclick="prevQ()">← Previous</button>
+      <button id="nextBtn" class="btn primary" onclick="nextQ()">Check Answer →</button>
+      <button class="btn primary" onclick="submitQuiz()">Submit ✓</button>
+    </div>
+  </section>
+
+  <section id="result" class="result">
+    <div class="score">
+      <div class="ringbox">
+        <div class="ring" id="ring"></div>
+        <div class="ringnum" id="scoreNum">0%</div>
+      </div>
+      <div>
+        <div class="topic">RESULT</div>
+        <h2 id="resultTitle">Your result</h2>
+        <div id="resultSub" class="sub"></div>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><b id="correctN">0</b><small>Correct</small></div>
+      <div class="metric"><b id="wrongN">0</b><small>Wrong</small></div>
+      <div class="metric"><b id="skipN">0</b><small>Unanswered</small></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz(true)">🔄 New shuffled attempt</button>
+      <button class="btn secondary" id="retryWrongBtn" style="display:none" onclick="retryWrong()">🔁 Retry wrong questions only</button>
+    </div>
+    <div class="review">
+      <h3>Answer review</h3>
+      <div id="reviewList"></div>
+    </div>
+    <div class="footnote">Green = correct answer. Red = your incorrect choice.</div>
+  </section>
+</main>
+
+<script>
+const STORAGE_KEY = 'medbank_cardio_chest_exam2_v1';
+
+const BANK = [
+  {
+    topic: "Chest",
+    stem: "A 47-year-old male patient presented with dyspnea, fever, dry cough, and pleuritic chest pain. The condition was associated with hyponatremia. The most probably causative organism is:",
+    options: ["Legionella pneumonia", "Streptococcal pneumoniae", "Staph aureus", "Mycoplasma"],
+    answer: 0,
+    id: 1
+  },
+  {
+    topic: "Chest",
+    stem: "Which of the following is a complication of chronic bronchitis?",
+    options: ["Pneumothorax", "Cystic fibrosis", "Lung cancer", "Cor pulmonale"],
+    answer: 3,
+    id: 2
+  },
+  {
+    topic: "Cardio",
+    stem: "Patients with hypertrophic obstructive cardiomyopathy (HOCM) may present with:",
+    options: ["Stroke", "Haemoptysis", "Sudden death", "Supraventricular tachycardia"],
+    answer: 2,
+    id: 3
+  },
+  {
+    topic: "Cardio",
+    stem: "Female patient, 65 years old, known to be hypertensive (uncontrolled due to irregular treatment), presented at an emergency room (ER) with acute dyspnea and orthopnea. On examination, the patient was cyanosed and blood pressure was 200/100 mmHg. By auscultation, bilateral fine basal crepitations were heard on both lungs. The most likely diagnosis is:",
+    options: ["Acute right side heart failure", "Acute left side heart failure", "Bronchial asthma", "Myocarditis"],
+    answer: 1,
+    id: 4
+  },
+  {
+    topic: "Chest",
+    stem: "Arterial blood gases (ABG) in ARDS shows:",
+    options: ["Hypoxemia with hypercapnia", "Hypoxemia with hypocapnia", "Hypercapnia with no hypoxemia", "No hypoxemia and no hypocapnia"],
+    answer: 1,
+    id: 5
+  },
+  {
+    topic: "Chest",
+    stem: "Which is the most common cause for predominant neutrophils in pleural effusion?",
+    options: ["Malignancy", "Parapneumonic", "Heart failure", "Rheumatoid arthritis"],
+    answer: 1,
+    id: 6
+  },
+  {
+    topic: "Chest",
+    stem: "Which of the following is the goal of oxygen therapy?",
+    options: ["Correcting hypoxemia", "Correcting underlying disorders", "Correcting anemia", "Correcting cardiac output"],
+    answer: 0,
+    id: 7
+  },
+  {
+    topic: "Chest",
+    stem: "Horner's syndrome is a complication of which of the following?",
+    options: ["Bronchial carcinoma", "Right apical carcinoma", "Apical lung abscess", "Right lower lobe carcinoma"],
+    answer: 1,
+    id: 8
+  },
+  {
+    topic: "Chest",
+    stem: "Which of the following is the cause of using long acting beta-2 agonist with inhaled corticosteroids?",
+    options: ["Delay up regulation of receptors", "Enhance down regulation of receptors", "Prevent occurrence of tolerance", "Decrease the hypokalemic effects"],
+    answer: 2,
+    id: 9
+  },
+  {
+    topic: "Chest",
+    stem: "Which of the following chest X-ray findings is indicative of a poor prognosis in a case of interstitial lung disease?",
+    options: ["Bibasilar reticular pattern", "Honeycombing", "Nodular pattern of alveolar filling", "Mixed pattern of alveolar filling"],
+    answer: 1,
+    id: 10
+  },
+  {
+    topic: "Chest",
+    stem: "Rigid bronchoscopy is preferentially indicated for?",
+    options: ["Persistent pneumonia", "Extracting foreign bodies", "Atelectasis", "Interstitial disease"],
+    answer: 1,
+    id: 11
+  },
+  {
+    topic: "Chest",
+    stem: "Which of the following is the most common presenting feature of cystic fibrosis?",
+    options: ["Failure to thrive", "Persistent respiratory symptoms", "Meconium ileus", "Hepatobiliary disease"],
+    answer: 1,
+    id: 12
+  },
+  {
+    topic: "Cardio",
+    stem: "What would be an appropriate first-line treatment for the management of cyanosis as a result of heart disease?",
+    options: ["Indomethacin administration", "Prostaglandin E1 infusion", "Nitric oxide", "Surfactant"],
+    answer: 1,
+    id: 13
+  },
+  {
+    topic: "Cardio",
+    stem: "A previously healthy 4-year-old boy is noted to have a respiratory rate of 40 breaths per min, a heart rate of 140 beats per min, two weeks after having a nonspecific upper respiratory tract infection. His heart rate is occasionally irregular and a gallop rhythm is noted. A 1/6 blowing systolic murmur is heard at the apex. He has moderate hepatomegaly. Which of the following is the MOST likely diagnosis?",
+    options: ["Acute rheumatic fever", "Infective endocarditis", "Viral myocarditis", "Pericarditis"],
+    answer: 2,
+    id: 14
+  },
+  {
+    topic: "Cardio",
+    stem: "A 50-year-old male who is known to be diabetic, hypertensive, and a heavy smoker came to the emergency room (ER) complaining of progressive, severe compressing retrosternal chest pain and shortness of breath. What is the first investigation to be ordered for this patient?",
+    options: ["Serum troponin", "Chest X-ray", "Arterial blood gases", "ECG"],
+    answer: 3,
+    id: 15
+  },
+  {
+    topic: "Cardio",
+    stem: "The apex is formed mainly by?",
+    options: ["Left atrium", "Right atrium", "Left ventricle", "Right ventricle"],
+    answer: 2,
+    id: 16
+  },
+  {
+    topic: "Cardio",
+    stem: "The murmur associated with mitral valve stenosis is?",
+    options: ["Mid diastolic click and late diastolic murmur heard at apex", "Mid diastolic rumbling murmur", "Holosystolic murmur", "Ejection systolic murmur"],
+    answer: 1,
+    id: 17
+  },
+  {
+    topic: "Cardio",
+    stem: "What are the components of tetralogy of Fallot?",
+    options: [
+      "Infundibular stenosis, ventricular septal defect, overriding aorta, right ventricular hypertrophy",
+      "Atrial septal defect, cleft tricuspid valve, patent ductus arteriosus, aortic stenosis",
+      "Atrial septal defect, pulmonary stenosis, ventricular septal defect, aortic regurgitation",
+      "Left ventricular hypertrophy, infundibular stenosis, overriding aorta, aortic stenosis"
+    ],
+    answer: 0,
+    id: 18
+  },
+  {
+    topic: "Cardio",
+    stem: "Which of the following Duke criteria is a major criterion for infective endocarditis?",
+    options: [
+      "Immunological findings such as glomerulonephritis",
+      "Predisposing cardiac conditions or intravenous drug abuse",
+      "Chronic bronchitis",
+      "Blood culture positive for typical infective endocarditis organisms"
+    ],
+    answer: 3,
+    id: 19
+  },
+  {
+    topic: "Cardio",
+    stem: "What is the cardiac ejection fraction?",
+    options: [
+      "It is the percentage of blood leaving the heart in each cardiac cycle",
+      "It is the percentage ratio of cardiac work to total energy expenditure",
+      "It is the cardiac output per square meter body surface area",
+      "It is a premature contraction of the heart occurring during diastole"
+    ],
+    answer: 0,
+    id: 20
+  }
+];
+
+let questions = [], answers = [], idx = 0, start = 0, timer = null, submitted = false, isRetryMode = false;
+const $ = id => document.getElementById(id);
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function saveState() {
+  if (!questions.length) return;
+  const state = {
+    questions,
+    answers,
+    idx,
+    start,
+    submitted,
+    isRetryMode,
+    savedAt: Date.now()
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function showHomeWithResume() {
+  const state = loadState();
+  const banner = $('resumeBanner');
+  const resumeBtn = $('resumeBtn');
+  if (state && state.questions && state.questions.length && !state.submitted) {
+    const done = state.answers.filter(a => a !== null).length;
+    const total = state.questions.length;
+    banner.style.display = 'block';
+    banner.innerHTML = '<strong>Last attempt found</strong> — You were on question ' + (state.idx + 1) + ' of ' + total +
+      ' (' + done + ' answered). You can continue or start a fresh exam.';
+    resumeBtn.style.display = 'inline-block';
+  } else {
+    banner.style.display = 'none';
+    resumeBtn.style.display = 'none';
+  }
+}
+
+function startQuiz(forceFresh) {
+  clearInterval(timer);
+  submitted = false;
+  isRetryMode = false;
+  idx = 0;
+  start = Date.now();
+  if (forceFresh) clearState();
+  questions = shuffle(BANK.map(q => ({
+    ...q,
+    options: shuffle(q.options.map((text, i) => ({ text, orig: i }))),
+    revealed: false
+  })));
+  answers = Array(questions.length).fill(null);
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resumeQuiz() {
+  const state = loadState();
+  if (!state || !state.questions || !state.questions.length || state.submitted) {
+    startQuiz(true);
+    return;
+  }
+  clearInterval(timer);
+  questions = state.questions;
+  answers = state.answers;
+  idx = Math.min(state.idx || 0, questions.length - 1);
+  start = state.start || Date.now();
+  submitted = false;
+  isRetryMode = !!state.isRetryMode;
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retryWrong() {
+  const wrongQs = [];
+  questions.forEach((q, i) => {
+    const selected = answers[i];
+    const isCorrect = selected !== null && q.options[selected].orig === q.answer;
+    if (!isCorrect) {
+      const original = BANK.find(b => b.id === q.id) || q;
+      wrongQs.push({
+        topic: original.topic,
+        stem: original.stem,
+        options: original.options.slice(),
+        answer: original.answer,
+        id: original.id
+      });
+    }
+  });
+  if (!wrongQs.length) {
+    alert('No wrong or unanswered questions to retry!');
+    return;
+  }
+  clearInterval(timer);
+  submitted = false;
+  isRetryMode = true;
+  idx = 0;
+  start = Date.now();
+  questions = shuffle(wrongQs.map(q => ({
+    ...q,
+    options: shuffle(q.options.map((text, i) => ({ text, orig: i }))),
+    revealed: false
+  })));
+  answers = Array(questions.length).fill(null);
+  $('result').style.display = 'none';
+  $('home').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function tick() {
+  let s = Math.floor((Date.now() - start) / 1000);
+  let m = Math.floor(s / 60);
+  let sec = s % 60;
+  $('timer').textContent = String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+}
+
+function render() {
+  const q = questions[idx];
+  $('qtopic').textContent = q.topic + (isRetryMode ? ' • Retry wrong' : '');
+  $('qtext').textContent = q.stem;
+  $('counter').textContent = (idx + 1) + ' / ' + questions.length;
+  $('progressFill').style.width = ((idx + 1) / questions.length * 100) + '%';
+  const box = $('choices');
+  box.innerHTML = '';
+  const revealed = q.revealed === true;
+  q.options.forEach((o, i) => {
+    const d = document.createElement('div');
+    let cls = 'choice' + (answers[idx] === i ? ' selected' : '');
+    if (revealed) {
+      if (o.orig === q.answer) cls += ' correctChoice';
+      else if (answers[idx] === i) cls += ' wrongChoice';
+    }
+    d.className = cls;
+    d.onclick = () => {
+      if (!q.revealed) {
+        answers[idx] = i;
+        saveState();
+        render();
+      }
+    };
+    d.innerHTML = '<div class="radio"></div><div class="letter">' + String.fromCharCode(65 + i) + '</div><div class="choiceText"></div>';
+    d.querySelector('.choiceText').textContent = o.text;
+    box.appendChild(d);
+  });
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  if (revealed) {
+    const selected = answers[idx];
+    const correctText = q.options.find(o => o.orig === q.answer).text;
+    if (selected !== null && q.options[selected].orig === q.answer) {
+      fb.classList.add('show', 'good');
+      fb.innerHTML = '<div class="feedbackTitle">✓ Correct answer</div><div>You chose <span class="feedbackAnswer">' + esc(q.options[selected].text) + '</span> — that is the correct answer.</div>';
+    } else if (selected === null) {
+      fb.classList.add('show', 'bad');
+      fb.innerHTML = '<div class="feedbackTitle">Correct answer</div><div>You did not select an answer.</div><div class="feedbackAnswer">✓ ' + esc(correctText) + '</div>';
+    } else {
+      fb.classList.add('show', 'bad');
+      fb.innerHTML = '<div class="feedbackTitle">✕ Not quite</div><div>Your answer: <span class="feedbackAnswer">' + esc(q.options[selected].text) + '</span></div><div>Correct answer: <span class="feedbackAnswer">' + esc(correctText) + '</div>';
+    }
+  }
+  $('nextBtn').textContent = revealed
+    ? (idx < questions.length - 1 ? 'Next Question →' : 'Finish & See Result →')
+    : 'Check Answer →';
+  saveState();
+}
+
+function nextQ() {
+  const q = questions[idx];
+  if (!q.revealed) {
+    if (answers[idx] === null) {
+      const fb = $('feedback');
+      fb.className = 'feedback show bad';
+      fb.innerHTML = '<div class="feedbackTitle">Choose an answer first</div><div>Select one of the options, then press <b>Check Answer</b>.</div>';
+      return;
+    }
+    q.revealed = true;
+    saveState();
+    render();
+    return;
+  }
+  if (idx < questions.length - 1) {
+    idx++;
+    saveState();
+    render();
+    scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    submitQuiz();
+  }
+}
+
+function prevQ() {
+  if (idx > 0) {
+    idx--;
+    saveState();
+    render();
+    scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function submitQuiz() {
+  if (submitted) return;
+  if (!confirm('Submit your exam and reveal the result?')) return;
+  submitted = true;
+  clearInterval(timer);
+  let c = 0, w = 0, s = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === null) s++;
+    else if (q.options[answers[i]].orig === q.answer) c++;
+    else w++;
+  });
+  let pct = Math.round(c / questions.length * 100);
+  $('quiz').style.display = 'none';
+  $('result').style.display = 'block';
+  $('scoreNum').textContent = pct + '%';
+  $('ring').style.setProperty('--deg', (pct * 3.6) + 'deg');
+  $('correctN').textContent = c;
+  $('wrongN').textContent = w;
+  $('skipN').textContent = s;
+  $('resultTitle').textContent = pct >= 85 ? 'Excellent work 🔥' : pct >= 70 ? 'Very good 💪' : pct >= 50 ? 'Good start — review your mistakes' : 'Keep going — one more round will help';
+  $('resultSub').textContent = c + ' / ' + questions.length + ' correct • ' + pct + '%' + (isRetryMode ? ' (Retry mode)' : '');
+  const retryBtn = $('retryWrongBtn');
+  if (w + s > 0) {
+    retryBtn.style.display = 'inline-block';
+    retryBtn.textContent = '🔁 Retry wrong questions only (' + (w + s) + ')';
+  } else {
+    retryBtn.style.display = 'none';
+  }
+  buildReview();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildReview() {
+  const box = $('reviewList');
+  box.innerHTML = '';
+  questions.forEach((q, i) => {
+    const selected = answers[i];
+    const ok = selected !== null && q.options[selected].orig === q.answer;
+    const d = document.createElement('div');
+    d.className = 'reviewItem ' + (ok ? 'correct' : 'wrong');
+    let h = '<div class="rmeta">Question ' + (i + 1) + ' • ' + q.topic + '</div><div class="rstem">' + esc(q.stem) + '</div>';
+    if (selected === null) h += '<div class="ranswer red">Not answered</div>';
+    else if (ok) h += '<div class="ranswer green">✓ Correct: ' + esc(q.options[selected].text) + '</div>';
+    else h += '<div class="ranswer"><span class="red">✕ Your answer: ' + esc(q.options[selected].text) + '</span><br><span class="green">✓ Correct answer: ' + esc(q.options.find(o => o.orig === q.answer).text) + '</span></div>';
+    d.innerHTML = h;
+    box.appendChild(d);
+  });
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+}
+
+// Auto-resume unfinished attempt on load
+(function init() {
+  const state = loadState();
+  if (state && state.questions && state.questions.length && !state.submitted) {
+    resumeQuiz();
+  } else {
+    showHomeWithResume();
+  }
+})();
+</script>
+</body>
+</html>

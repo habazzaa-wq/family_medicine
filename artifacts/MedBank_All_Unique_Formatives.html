@@ -1,0 +1,497 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MedBank • Formatives Cardio & Chest (Previous Year + Formative 2)</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#102033;--muted:#6b7a90;--line:#e5eaf1;--primary:#e11d48;--good:#16a34a;--bad:#dc2626;--goodbg:#ecfdf3;--badbg:#fef2f2;--shadow:0 18px 50px rgba(16,32,51,.10)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#fff1f2 0,#f5f7fb 40%,#f7f8fb 100%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+button{font:inherit}
+.app{max-width:1100px;margin:auto;padding:22px 16px 50px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#e11d48,#f43f5e);display:grid;place-items:center;color:#fff;font-weight:900;font-size:23px;box-shadow:0 10px 25px rgba(225,29,72,.25)}
+h1{font-size:20px;margin:0 0 3px}
+.sub{font-size:12px;color:var(--muted)}
+.pill{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-size:12px;color:var(--muted)}
+.hero,.quiz,.result{background:rgba(255,255,255,.94);border:1px solid rgba(229,234,241,.95);border-radius:24px;box-shadow:var(--shadow)}
+.hero{padding:34px 30px;margin-top:18px}
+.hero h2{font-size:34px;line-height:1.1;margin:0 0 10px}
+.hero p{color:var(--muted);max-width:680px;line-height:1.7}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.stat{padding:12px 15px;border:1px solid var(--line);border-radius:15px;background:#fafcff;min-width:110px}
+.stat b{display:block;font-size:19px}
+.stat span{font-size:11px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:0;border-radius:14px;padding:13px 18px;cursor:pointer;font-weight:800;transition:.2s}
+.btn.primary{background:linear-gradient(135deg,#e11d48,#f43f5e);color:#fff;box-shadow:0 10px 25px rgba(225,29,72,.2)}
+.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn:hover{transform:translateY(-1px)}
+.quiz{padding:18px;display:none}
+.barrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.progress{height:9px;background:#edf1f6;border-radius:999px;overflow:hidden;flex:1}
+.progress>div{height:100%;background:linear-gradient(90deg,#e11d48,#f43f5e);width:0;transition:.25s}
+.counter{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+.qcard{border:1px solid var(--line);border-radius:20px;padding:25px;background:#fff}
+.topic{display:inline-flex;padding:6px 10px;border-radius:999px;background:#ffe4e6;color:#be123c;font-size:11px;font-weight:800;margin-bottom:13px}
+.qtext{font-size:20px;line-height:1.55;font-weight:800;margin:0 0 20px}
+.choices{display:grid;gap:11px}
+.choice{border:1.5px solid #dfe5ed;border-radius:16px;padding:15px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:.18s;background:#fff}
+.choice:hover{border-color:#fda4af;background:#fff1f2}
+.choice.selected{border-color:#e11d48;background:#fff1f2;box-shadow:0 0 0 3px rgba(225,29,72,.08)}
+.radio{width:22px;height:22px;border:2px solid #b8c2d1;border-radius:50%;flex:none;display:grid;place-items:center}
+.selected .radio{border-color:#e11d48}
+.selected .radio:after{content:"";width:10px;height:10px;background:#e11d48;border-radius:50%}
+.letter{width:25px;height:25px;border-radius:8px;background:#f0f3f8;display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
+.selected .letter{background:#ffe4e6;color:#be123c}
+.choiceText{line-height:1.55;flex:1}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.nav .btn{min-width:120px}
+.timer{font-variant-numeric:tabular-nums;font-weight:900}
+.result{display:none;padding:30px}
+.score{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ringbox{position:relative;width:150px;height:150px}
+.ring{width:150px;height:150px;border-radius:50%;background:conic-gradient(#e11d48 var(--deg),#e8edf5 0);display:grid;place-items:center}
+.ring:after{content:"";width:116px;height:116px;border-radius:50%;background:#fff;position:absolute;left:17px;top:17px}
+.ringnum{position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-size:30px;font-weight:900}
+.result h2{font-size:30px;margin:0 0 5px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
+.metric{border:1px solid var(--line);border-radius:16px;padding:15px}
+.metric b{font-size:22px}
+.metric small{display:block;color:var(--muted);margin-top:3px}
+.review{margin-top:25px}
+.reviewItem{border:1px solid var(--line);border-radius:17px;padding:17px;margin:10px 0;background:#fff}
+.reviewItem.correct{border-color:#bbf7d0;background:var(--goodbg)}
+.reviewItem.wrong{border-color:#fecaca;background:var(--badbg)}
+.rmeta{font-size:11px;font-weight:900;color:var(--muted);margin-bottom:6px}
+.rstem{font-weight:800;line-height:1.5}
+.ranswer{margin-top:8px;font-size:13px}
+.green{color:var(--good);font-weight:800}
+.red{color:var(--bad);font-weight:800}
+.footnote{margin-top:16px;color:var(--muted);font-size:11px;line-height:1.6}
+.resumeBanner{display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:16px;padding:14px 18px;margin-bottom:16px;font-size:14px;line-height:1.5}
+.resumeBanner strong{color:#be123c}
+@media(max-width:650px){.app{padding:12px 10px 35px}.hero{padding:24px 19px}.hero h2{font-size:27px}.qcard{padding:19px}.qtext{font-size:18px}.metrics{grid-template-columns:1fr}.nav .btn{min-width:0;flex:1}.top .pill{display:none}}
+.feedback{display:none;margin-top:18px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);line-height:1.6}
+.feedback.show{display:block}
+.feedback.good{background:var(--goodbg);border-color:#bbf7d0}
+.feedback.bad{background:var(--badbg);border-color:#fecaca}
+.feedbackTitle{font-weight:900;margin-bottom:4px}
+.feedbackAnswer{font-weight:800}
+.choice.correctChoice{background:var(--goodbg);border-color:#86efac}
+.choice.wrongChoice{background:var(--badbg);border-color:#fca5a5}
+.choice.correctChoice .radio{border-color:var(--good);background:var(--good)}
+.choice.wrongChoice .radio{border-color:var(--bad);background:var(--bad)}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <h1>MedBank</h1>
+        <div class="sub">All Unique • Cardio + Chest Formatives</div>
+      </div>
+    </div>
+    <div class="pill" id="totalPill">97 questions</div>
+  </div>
+
+  <section id="home" class="hero">
+    <div class="topic">FORMATIVES — CARDIO & CHEST</div>
+    <h2>Previous Year + Formative 2</h2>
+    <p>أسئلة من Formatives Cardio &amp; Chest previous year + Formative 2 Cardio. تم تطبيق التصحيحات المطلوبة (Q3/8/11/16 Cardio + Q7 Chest). التقدم بيتحفظ تلقائيًا.</p>
+    <div id="resumeBanner" class="resumeBanner"></div>
+    <div class="stats">
+      <div class="stat"><b id="statN">48</b><span>Questions</span></div>
+      <div class="stat"><b>∞</b><span>Attempts</span></div>
+      <div class="stat"><b>⏱</b><span>Timer</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz(false)">🚀 Start Exam</button>
+      <button class="btn secondary" onclick="startQuiz(true)">🔀 Fresh shuffle</button>
+      <button class="btn secondary" id="resumeBtn" style="display:none" onclick="resumeQuiz()">▶ Continue last attempt</button>
+    </div>
+  </section>
+
+  <section id="quiz" class="quiz">
+    <div class="barrow">
+      <div class="timer" id="timer">00:00</div>
+      <div class="progress"><div id="progressFill"></div></div>
+      <div class="counter" id="counter">1 / 48</div>
+    </div>
+    <div class="qcard">
+      <div class="topic" id="qtopic">Cardio</div>
+      <h2 class="qtext" id="qtext"></h2>
+      <div class="choices" id="choices"></div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+    <div class="nav">
+      <button class="btn secondary" onclick="prevQ()">← Previous</button>
+      <button id="nextBtn" class="btn primary" onclick="nextQ()">Check Answer →</button>
+      <button class="btn primary" onclick="submitQuiz()">Submit ✓</button>
+    </div>
+  </section>
+
+  <section id="result" class="result">
+    <div class="score">
+      <div class="ringbox">
+        <div class="ring" id="ring"></div>
+        <div class="ringnum" id="scoreNum">0%</div>
+      </div>
+      <div>
+        <div class="topic">RESULT</div>
+        <h2 id="resultTitle">Your result</h2>
+        <div id="resultSub" class="sub"></div>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><b id="correctN">0</b><small>Correct</small></div>
+      <div class="metric"><b id="wrongN">0</b><small>Wrong</small></div>
+      <div class="metric"><b id="skipN">0</b><small>Unanswered</small></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz(true)">🔄 New shuffled attempt</button>
+      <button class="btn secondary" id="retryWrongBtn" style="display:none" onclick="retryWrong()">🔁 Retry wrong / unanswered only</button>
+      <button class="btn secondary" onclick="location.reload()">🏠 Home</button>
+    </div>
+    <div class="review" id="review"></div>
+    <div class="footnote">Answers follow the corrected keys you provided. Progress is stored in this browser only (localStorage).</div>
+  </section>
+</main>
+
+<script>
+const STORAGE_KEY = "medbank_all_unique_v1";
+
+const BANK = [
+  {topic:"Chest",stem:"Potential clinical complication of silicosis is:",options:["Mycobacterium tuberculosis infection","Rheumatoid arthritis","Scleroderma","Cor pulmonale"],answer:0,id:1},
+  {topic:"Chest",stem:"Adverse effect associated with morphine includes:",options:["Diarrhea","Bronchoconstriction","Lacrimation","Vasoconstriction"],answer:1,id:2},
+  {topic:"Chest",stem:"What does hypoxia mean?",options:["Increased hemoglobin in the blood","Decreased oxygen reaching bodily tissues","Decreased hemoglobin in the blood","Increased oxygen reaching bodily tissues"],answer:1,id:3},
+  {topic:"Chest",stem:"Pulmonary veins differ from other veins in that they:",options:["Carry blood away from the heart","Carry deoxygenated blood","Carry oxygenated blood","Have cartilaginous walls"],answer:2,id:4},
+  {topic:"Chest",stem:"As a risk reduction strategy, which vaccination should be recommended to all COPD patients beside a yearly influenza vaccination?",options:["Herpes zoster vaccine","Haemophilus influenza vaccine","Pneumococcal vaccination","Rubella vaccination"],answer:2,id:5},
+  {topic:"Chest",stem:"What lab test do you order on the sputum sample of a COPD patient?",options:["Culture and sensitivity","Culture and gram stain","Acid fast bacteria","Culture only"],answer:1,id:6},
+  {topic:"Chest",stem:"Thymoma is:",options:["Anterior mediastinal lesion","Posterior mediastinal lesion","Middle mediastinal lesion","Superior mediastinal lesion"],answer:0,id:7},
+  {topic:"Chest",stem:"A 75-year-old male presented with dyspnea and chest pain. Chest X-ray showed unilateral pleural effusion. Aspiration revealed exudative hemorrhagic pleural effusion. Which finding is coincident with mesothelioma?",options:["Low glucose and pH","High glucose and pH","Low glucose and high pH","High glucose and low pH"],answer:0,id:8},
+  {topic:"Chest",stem:"Pleural effusions that occur secondarily to __________ are most often treated with pleurodesis.",options:["Ascites","Congestive heart failure","Nephrotic syndrome","Malignancy"],answer:3,id:9},
+  {topic:"Chest",stem:"Horner's syndrome is a complication of which of the following lesions?",options:["Bronchial carcinoid","Right apical carcinoma","Apical lung abscess","Right basal carcinoma"],answer:1,id:10},
+  {topic:"Chest",stem:"Which one of the following lung cancers has a worse prognosis?",options:["Adenocarcinoma","Bronchioalveolar carcinoma","Squamous cell carcinoma","Small cell carcinoma"],answer:3,id:11},
+  {topic:"Chest",stem:"A 45-year-old male presented with fever, dyspnea and productive cough. Chest X-ray detected lobar pneumonia. Ultrasound was recommended. Which is the expected ultrasound finding?",options:["Absent pleural sliding/gliding","Absent comet tail artifacts","Horizontal reverberation artifacts","Air Bronchogram"],answer:3,id:12},
+  {topic:"Chest",stem:"A 15-year-old male basketball player presented with severe stitching left-sided chest pain and dyspnea. Ultrasound revealed absent left lung sliding with horizontal reverberation artifacts. Most probable diagnosis is:",options:["Pleural effusion","Pneumothorax","Pulmonary embolism","Pneumonia"],answer:1,id:13},
+  {topic:"Chest",stem:"Forced Vital Capacity (FVC) is defined as:",options:["Maximal amount of air that the patient can forcibly inhale after a maximal exhalation","Maximal amount of air that the patient can forcibly exhale after taking a maximal inhalation","Maximal amount of air that the patient can forcibly exhale after taking a maximal exhalation","Maximal amount of air that the patient can forcibly inhale after taking a maximal inhalation"],answer:1,id:14},
+  {topic:"Chest",stem:"Forced Expiratory Volume in 1st second (FEV1) is defined as:",options:["Volume exhaled in the first second","Volume inhaled in the first second","Volume inhaled and exhaled in the first second","Volume maximally inhaled in the first second"],answer:0,id:15},
+  {topic:"Chest",stem:"Inhaled corticosteroids for the long-term treatment of asthma exhibit the following desired feature:",options:["Enhance cellular response to inflammatory mediators","Increase production of leukotriene","Mast cell stabilization","Relaxation of skeletal muscle"],answer:2,id:16},
+  {topic:"Chest",stem:"Regarding the drug interaction of theophylline, the half-life of theophylline is decreased by which of the following?",options:["Erythromycin","Phenobarbitone","Quinolones","Cimetidine"],answer:1,id:17},
+  {topic:"Chest",stem:"Highest prevalence of sarcoidosis is reported in:",options:["Nordic population","Hispanic population","Aborigines in Australia","Red Indian tribes"],answer:0,id:18},
+  {topic:"Chest",stem:"Löfgren's syndrome is characterized by:",options:["Arthritis","Erythema nodosum","Bilateral hilar adenopathy","All of the above"],answer:3,id:19},
+  {topic:"Chest",stem:"Major health effect from exposure to asbestos is:",options:["Pleural fibrosis","Diffuse interstitial pulmonary fibrosis","Cancers of respiratory tract, pleura & peritoneum","All of the above"],answer:3,id:20},
+  {topic:"Chest",stem:"A 35-year-old male presented with left-sided pleuritic chest pain, cough and dyspnea. Labs revealed HIV. Chest X-ray showed left-sided cavity surrounded by consolidation. One of the common causative organisms in this case is:",options:["Pneumocystis jirovecii (PCP)","Staphylococcus aureus","Hemophilus influenza","Streptococcus pneumonia"],answer:1,id:21},
+  {topic:"Chest",stem:"Shunt occurs when:",options:["Arterial blood mixes with venous blood (left to right)","Venous blood mixes with arterial blood (right to left)","A combination of both conditions above","Ventilation and perfusion are equal"],answer:1,id:22},
+  {topic:"Chest",stem:"High ventilation/Perfusion mismatch is:",options:["Ventilation without perfusion","Perfusion without ventilation","Ventilation and perfusion are equal","A cardiac output higher than minute ventilation"],answer:0,id:23},
+  {topic:"Chest",stem:"A 63-year-old man has had progressively worsening dyspnea over the past 10 years with 5 kg weight loss. Chronic cough with minimal sputum. Chest radiograph shows extensive interstitial disease. PFTs show restrictive dysfunction. Increased exposure to which pollutant is most likely?",options:["Carbon monoxide","Ozone","Asbestosis","Tobacco smoke"],answer:2,id:24},
+  {topic:"Chest",stem:"Which statement regarding the management of non-idiopathic pulmonary fibrosis is most accurate?",options:["Lung transplantation is not considered appropriate in severe stages","Antifibrotic agents may reduce lung function decline","Pulmonary rehabilitation is not of value","Vaccines should be avoided due to high risk of side effects"],answer:1,id:25},
+  {topic:"Chest",stem:"Which subgroup of patients with idiopathic pulmonary fibrosis may be considered for long-term oxygen therapy?",options:["Patients with clinically significant resting hypoxemia","Patients who smoke","Patients with exertional hypoxemia","Patients who do not respond to pulmonary therapy"],answer:0,id:26},
+  {topic:"Chest",stem:"Which one of the following is NOT true regarding lung tumors?",options:["The most common benign lung tumors are pulmonary hamartomas, lung neurofibromas, or lipomas","70% of lung tumors are malignant","Bronchogenic carcinomas often present late when local invasion and metastases are already present","5-year survival is less than 15%"],answer:0,id:27},
+  {topic:"Chest",stem:"Which of the following is the most accurate about a small pleural effusion for which thoracocentesis is not required?",options:["Recent thoracic or abdominal surgery","Too small to safely aspirate","In clinically stable patients","Presence can be explained by underlying congestive heart failure"],answer:1,id:28},
+  {topic:"Chest",stem:"What is the most accurate enzyme to rule out TB in case of exudative lymphocytic pleural effusion?",options:["Amylase","Adenosine deaminase","Pepsin","Lipase"],answer:1,id:29},
+  {topic:"Chest",stem:"What is the most common cause of simple parapneumonic exudative pleural effusion?",options:["Viral infection","Fungal infection","Bacterial infection","TB infection"],answer:2,id:30},
+  {topic:"Chest",stem:"In which situation is surgical management of bronchiectasis preferred?",options:["Localized bronchiectasis","Cystic fibrosis","Allergic bronchopulmonary aspergillosis","Bilateral bronchiectasis"],answer:0,id:31},
+  {topic:"Chest",stem:"Upper lobe predominant bronchiectasis is seen in:",options:["Allergic bronchopulmonary aspergillosis","Foreign body inhalation","William Campbell syndrome","Cystic fibrosis"],answer:3,id:32},
+  {topic:"Chest",stem:"Which of the following is NOT a characteristic of asthma?",options:["Increase in IgG immunoglobulins","Airway hyperresponsiveness","Infiltration of eosinophils into the airways","Increased mucus production"],answer:0,id:33},
+  {topic:"Chest",stem:"A 30-year-old patient with mild persistent asthma presents with shortness of breath and wheezing not relieved by albuterol for 12 hours. Which is the most likely PFT result?",options:["Decreased FEV1, normal/increased FVC, decreased FEV1:FVC ratio, with post bronchodilator improvement","FEV1 increased by 13%","Decreased residual volume and total lung capacity","Increased FEV1, increased FVC, normal FEV1:FVC ratio"],answer:0,id:34},
+  {topic:"Chest",stem:"Which one of the following is a risk for primary pneumothorax?",options:["Chest trauma","Subpleural bleb or bullae","COPD","Asthma"],answer:1,id:35},
+  {topic:"Chest",stem:"In case of large pneumothorax with minimal symptoms, the treatment of choice is:",options:["Refer to cardiothoracic surgery","Oxygen therapy","No intervention just observation","Insert chest tube"],answer:1,id:36},
+  {topic:"Chest",stem:"Which one of the following is a first-line drug for TB treatment?",options:["Pyrazinamide","PASA","Kanamycin","Cycloserine"],answer:0,id:37},
+  {topic:"Chest",stem:"Ghon focus is generally located in:",options:["Upper part of the lower lobe","Lower part of the upper lobe","Upper part of upper lobe","A and B"],answer:3,id:38},
+  {topic:"Chest",stem:"A 60-year-old male Shisha smoker presented with cough and toxic symptoms. Chest X-ray showed upper right-sided cavity with air-fluid level. Sputum culture no growth. No improvement on broad-spectrum antibiotics. One possible causative organism is:",options:["Staphylococcus aureus","Hemophilus influenza","Streptococcus pneumonia","Mycobacterium tuberculosis bacilli"],answer:3,id:39},
+  {topic:"Cardio",stem:"The atrial depolarization in an electrocardiogram (ECG) is represented by which wave?",options:["P-wave","Q-wave","T-wave","R-wave"],answer:0,id:40},
+  {topic:"Cardio",stem:"Which of the following describes patent ductus arteriosus murmur?",options:["Holosystolic murmur","Ejection systolic murmur","Continuous murmur","Late diastolic murmur"],answer:2,id:41},
+  {topic:"Cardio",stem:"Closure of semilunar valves causes which sound?",options:["S3","S2","S4","S1"],answer:1,id:42},
+  {topic:"Cardio",stem:"Which diagnostic tool is NOT typically used to evaluate dyspnea?",options:["ECG","Cardiac enzymes","Chest X-ray","Electroencephalogram (EEG)"],answer:3,id:43},
+  {topic:"Cardio",stem:"One of the causes of irregular narrow complex tachyarrhythmia is:",options:["Supraventricular tachycardia","Ventricular tachycardia","Ventricular fibrillation","Atrial fibrillation"],answer:3,id:44},
+  {topic:"Cardio",stem:"What is the gold standard for assessing the severity of mitral stenosis?",options:["Chest X-ray","Electrocardiography","Cardiac catheterisation","Echocardiography with Doppler"],answer:3,id:45},
+  {topic:"Cardio",stem:"What is the primary treatment for infective endocarditis?",options:["Wide spectrum antibiotics until result of blood culture","Antiviral therapy","Cyclosporin","Corticosteroids"],answer:0,id:46},
+  {topic:"Cardio",stem:"A 45-year-old man presented with right hypochondrial pain, bilateral lower limb pitting edema and increased abdominal contour for 4 months. Examination revealed congested neck veins. This finding indicates:",options:["Decreased venous return","Systemic venous congestion and increased central venous pressure (CVP)","Chronic left side heart failure","Acute left side heart failure"],answer:1,id:47},
+  {topic:"Cardio",stem:"Which of the following is a classic sign of congestive heart failure?",options:["Dyspnoea","Unilateral ankle swelling","Fatigue","Normal JVP"],answer:0,id:48},
+  {topic:"Cardio",stem:"Which of the following is one of Jones' minor criteria?",options:["Pancarditis","Fleeting arthritis","Elevated erythrocytic sedimentation rate (ESR)","Erythema marginatum"],answer:2,id:49},
+  {topic:"Cardio",stem:"The primary underlying cause of most cases of Ischemic Heart Disease (IHD) is:",options:["Coronary artery vasospasm","Atherosclerosis of the coronary arteries","Valvular heart disease","Congenital heart defects"],answer:1,id:50},
+  {topic:"Cardio",stem:"The imbalance in Ischemic Heart Disease refers to a mismatch between:",options:["Oxygen supply and carbon dioxide removal in the lungs","Myocardial oxygen supply and myocardial oxygen demand","Blood glucose supply and myocardial energy demand","Atrial and ventricular contraction rates"],answer:1,id:51},
+  {topic:"Cardio",stem:"Organic nitrates, like nitroglycerin, primarily alleviate angina by:",options:["Increasing myocardial contractility","Causing direct coronary artery vasoconstriction","Reducing myocardial oxygen demand through venodilation (reducing preload) and some arteriodilation (reducing afterload)","Blocking beta-adrenergic receptors"],answer:2,id:52},
+  {topic:"Cardio",stem:"Which of the following beta-blockers is cardioselective (beta-1 selective)?",options:["Propranolol","Metoprolol","Nadolol","Timolol"],answer:1,id:53},
+  {topic:"Cardio",stem:"In patients with stable IHD and a history of myocardial infarction or heart failure, which class of drugs is generally recommended indefinitely (if not contraindicated) to reduce mortality?",options:["Diuretics","Beta-blockers (evidence-based)","Dihydropyridine calcium channel blockers as monotherapy","Ranolazine"],answer:1,id:54},
+  {topic:"Cardio",stem:"A crescendo-decrescendo systolic ejection murmur, radiating to the carotids, is a hallmark of:",options:["Mitral stenosis","Aortic regurgitation","Mitral valve prolapse","Aortic stenosis"],answer:3,id:55},
+  {topic:"Cardio",stem:"Pulsus parvus et tardus (a weak and delayed carotid pulse) is a clinical sign associated with severe:",options:["Mitral regurgitation","Aortic regurgitation","Aortic stenosis","Tricuspid stenosis"],answer:2,id:56},
+  {topic:"Cardio",stem:"A high-pitched, blowing, early diastolic decrescendo murmur best heard at the left sternal border is typical of:",options:["Aortic regurgitation","Pulmonary stenosis","Tricuspid regurgitation","Mitral stenosis"],answer:0,id:57},
+  {topic:"Cardio",stem:"Corrigan's pulse (water-hammer pulse) and a wide pulse-pressure are classic findings in:",options:["Mitral stenosis","Severe aortic regurgitation","Severe aortic stenosis","Cardiac tamponade"],answer:1,id:58},
+  {topic:"Cardio",stem:"A 'P mitrale' (broad, notched P wave in lead II) on an ECG is most indicative of:",options:["Right atrial enlargement","Left ventricular hypertrophy","Left atrial enlargement","Right ventricular hypertrophy"],answer:2,id:59},
+  {topic:"Cardio",stem:"Which of the following represents the surface anatomy of the apex of the heart?",options:["Lies opposite the left 5th intercostal space 9 cm from the middle line","Lies opposite the right 5th intercostal space 9 cm from the middle line","Lies opposite the left 6th intercostal space","Lies opposite the 4th thoracic vertebrae"],answer:0,id:60},
+  {topic:"Cardio",stem:"The most posterior structure of the heart is:",options:["Left atrium","Right atrium","Left ventricle","Right atrial appendage"],answer:0,id:61},
+  {topic:"Cardio",stem:"Which valves are commonly affected by rheumatic fever?",options:["Tricuspid, mitral","Mitral, Aortic","Tricuspid, pulmonary","Aortic, pulmonary"],answer:1,id:62},
+  {topic:"Cardio",stem:"Prophylactic antibiotic is indicated before dental extraction in the following:",options:["Coronary artery bypass","Prosthetic aortic valve","Chronic kidney disease","Liver cell failure"],answer:1,id:63},
+  {topic:"Cardio",stem:"Fever, Clubbing and Osler's nodes occur in:",options:["Leptospirosis","Typhoid fever","Infective endocarditis","Rheumatic fever"],answer:2,id:64},
+  {topic:"Cardio",stem:"In a patient suffering from congenital cyanotic heart disease who has to go for a dental procedure, when are prophylactic drugs given?",options:["One hour before the operation","7 days before the operation","3 hours before the operation","1 day before the operation"],answer:0,id:65},
+  {topic:"Cardio",stem:"The causative organism of rheumatic heart disease associated with rheumatic fever is:",options:["Beta hemolytic staphylococci","Beta hemolytic streptococci","Alpha hemolytic streptococci","Gamma hemolytic streptococci"],answer:1,id:66},
+  {topic:"Cardio",stem:"Characteristic pathologic feature of rheumatic fever is/are:",options:["Fever","Joint pain","Aschoff nodules","Headache"],answer:2,id:67},
+  {topic:"Cardio",stem:"Physical sign of severe aortic stenosis is:",options:["A diastolic rumble murmur","Delayed carotid upstroke","An opening snap","A late peaking holosystolic murmur"],answer:1,id:68},
+  {topic:"Cardio",stem:"De-Musset sign in Aortic regurgitation is:",options:["Bobbing of head","Nail pulsation","Neck pulsation","Pulsatile hepatomegaly"],answer:0,id:69},
+  {topic:"Cardio",stem:"In which of the following cases does an apical diastolic murmur occur?",options:["Ventricular septal defect","Mitral stenosis","Aortic stenosis","Mitral regurgitation"],answer:1,id:70},
+  {topic:"Cardio",stem:"Hemoptysis is a characteristic feature of:",options:["Mitral stenosis","Aortic stenosis","Mitral regurgitation","Aortic regurgitation"],answer:0,id:71},
+  {topic:"Cardio",stem:"A 52-year-old woman arrived to the ER complaining of repeated syncopal attacks and history of exertional chest pain. Pulse was of small volume. Most likely diagnosis:",options:["Aortic regurgitation","Mitral regurgitation","Aortic stenosis","Tricuspid regurgitation"],answer:2,id:72},
+  {topic:"Cardio",stem:"Wide fixed split of S2 is characteristic of:",options:["ASD","VSD","Pulmonary embolism","Constrictive pericarditis"],answer:0,id:73},
+  {topic:"Cardio",stem:"Which of the following describes Ventricular septal defect murmur?",options:["Holosystolic murmur","Ejection systolic murmur","Systolic-diastolic murmur","None of the above"],answer:0,id:74},
+  {topic:"Cardio",stem:"An infant with a marked cyanotic congenital heart defect with decreased pulmonary vascularity should be treated with:",options:["Digoxin","Prostaglandin E1 (PGE1)","Indomethacin","Epinephrine"],answer:1,id:75},
+  {topic:"Cardio",stem:"What is the function of the AV node?",options:["Serve as back-up pacemaker","Limit fibrillation entry into ventricles","Delay action potential to allow ventricular filling","All of the above"],answer:3,id:76},
+  {topic:"Cardio",stem:"Which type of cardiomyopathy in which cardiac muscle becomes stiff and restricts blood from filling ventricles (usually due to amyloidosis, radiation, or myocardial fibrosis)?",options:["Hypertrophic cardiomyopathy","Dilated cardiomyopathy","Restrictive cardiomyopathy","Viral cardiomyopathy"],answer:2,id:77},
+  {topic:"Cardio",stem:"When fluid builds up in the lungs due to ineffective pumping of blood by the heart (left-sided heart failure, AMI, volume overload), this is:",options:["Hypovolemic shock","Pericarditis","Pulmonary edema","Myocarditis"],answer:2,id:78},
+  {topic:"Cardio",stem:"Which condition is most closely associated with weight gain, nausea, and a decrease in urine output?",options:["Angina pectoris","Cardiomyopathy","Left-sided heart failure","Right-sided heart failure"],answer:3,id:79},
+  {topic:"Cardio",stem:"A 55-year-old man has just arrived in ER with 20 minutes of central crushing chest pain. Which feature is most indicative of myocardial infarction at this moment?",options:["ST depression","ST elevation","Q waves","Sinus tachycardia"],answer:1,id:80},
+  {topic:"Cardio",stem:"Beck triad (distended neck veins, distant heart sounds, decreased blood pressure) is present in:",options:["Congestive heart failure","Cardiac shock","Cardiomyopathy","Cardiac tamponade"],answer:3,id:81},
+  {topic:"Cardio",stem:"In which type of angina does pain occur at rest, of new onset, of increasing intensity/duration, not relieved by rest, and slow to subside with nitroglycerin?",options:["Prinzmetal's (vasospastic) angina","Stable angina","Unstable angina","Musculoskeletal pain"],answer:2,id:82},
+  {topic:"Cardio",stem:"Masked hypertension is defined as:",options:["Normal office and home BP","Normal office BP and elevated home BP","Elevated office BP and normal home BP","Elevated office and home BP"],answer:1,id:83},
+  {topic:"Cardio",stem:"The most common primary tumor of the heart in adults is:",options:["Myxoma","Rhabdomyoma","Fibroma","Hemangioma"],answer:0,id:84},
+  {topic:"Cardio",stem:"The best tool for evaluation of posterior cardiac structures is:",options:["Transthoracic Echocardiography","ECG","Chest X-ray","Transesophageal echocardiography"],answer:3,id:85},
+  {topic:"Cardio",stem:"Classic exercise ECG finding in a patient with ischemic heart disease is:",options:["ST depression","ST elevation","P-R depression","P-R elevation"],answer:0,id:86},
+  {topic:"Cardio",stem:"The risk of dissecting aortic aneurysm is increased in:",options:["Marfan Syndrome","Rheumatic aortic stenosis","Coarctation of the aorta","Calcific aortic stenosis"],answer:0,id:87},
+  {topic:"Cardio",stem:"Mitral stenosis murmur is:",options:["Mid-diastolic rumbling murmur","Pan-systolic murmur","Ejection systolic murmur","Increased by inspiration"],answer:0,id:88},
+  {topic:"Cardio",stem:"Which murmur commonly radiates to the axilla?",options:["Aortic stenosis","Mitral regurgitation","Aortic regurgitation","Tricuspid regurgitation"],answer:1,id:89},
+  {topic:"Chest",stem:"A 40-year-old female bird-breeder presented with progressive dyspnea and cough. Chest X-ray showed pulmonary infiltrates; spirometry: low VC and FVC with normal FEV1/FVC. Most probable diagnosis:",options:["Interstitial lung disease","Bronchial asthma","COPD","Pneumonia"],answer:0,id:90},
+  {topic:"Chest",stem:"Spirometry cannot be used to:",options:["Differentiate obstructive from restrictive pulmonary disorders","Characterize severity of airway obstruction","Measure responses to therapy of obstructive airway disease","Diagnose pneumonia"],answer:3,id:91},
+  {topic:"Chest",stem:"Pulmonary capillary wedge pressure (PCWP) in ARDS is:",options:["≥ 20 mmHg","< 18 mmHg","≥ 32 mmHg","10 mmHg (fixed)"],answer:1,id:92},
+  {topic:"Chest",stem:"What is the most appropriate place in therapy for long-acting beta-agonists?",options:["As monotherapy","As rescue therapy","In combination with ICSs","In combination with cromolyn"],answer:2,id:93},
+  {topic:"Chest",stem:"Theophylline use can be limited by which of the following?",options:["The need to constantly monitor serum levels","A narrow therapeutic index","Numerous drug and disease interactions","All of the above"],answer:1,id:94},
+  {topic:"Chest",stem:"Which test is NOT used during diagnosis or monitoring of asthma?",options:["Diffusing capacity","Peak expiratory flow rate","Bronchial challenge test","Skin prick test"],answer:0,id:95},
+  {topic:"Chest",stem:"Bronchial artery on the right side arises from:",options:["Descending aorta","Carotid artery","Subclavian artery","Superior left bronchial artery"],answer:3,id:96},
+  {topic:"Chest",stem:"The cause of localized bronchiectasis is:",options:["Recurrent chest infection","Foreign body aspiration","Cystic fibrosis","Allergic bronchopulmonary aspergillosis"],answer:1,id:97},
+];
+
+
+let questions = [], answers = [], idx = 0, start = 0, timer = null, submitted = false, isRetryMode = false;
+const $ = id => document.getElementById(id);
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function saveState() {
+  if (!questions.length) return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      questions, answers, idx, start, submitted, isRetryMode, savedAt: Date.now()
+    }));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function clearState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function showHomeWithResume() {
+  const state = loadState();
+  const banner = $('resumeBanner');
+  const resumeBtn = $('resumeBtn');
+  if (state && state.questions && state.questions.length && !state.submitted) {
+    const done = state.answers.filter(a => a !== null).length;
+    banner.style.display = 'block';
+    banner.innerHTML = '<strong>Last attempt found</strong> — Question ' + (state.idx + 1) + ' of ' + state.questions.length + ' (' + done + ' answered).';
+    resumeBtn.style.display = 'inline-block';
+  } else {
+    banner.style.display = 'none';
+    resumeBtn.style.display = 'none';
+  }
+}
+
+function startQuiz(forceFresh) {
+  clearInterval(timer);
+  submitted = false;
+  isRetryMode = false;
+  idx = 0;
+  start = Date.now();
+  if (forceFresh) clearState();
+  questions = shuffle(BANK.map(q => ({
+    ...q,
+    options: shuffle(q.options.map((text, i) => ({ text, orig: i }))),
+    revealed: false
+  })));
+  answers = Array(questions.length).fill(null);
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  $('totalPill').textContent = questions.length + ' questions';
+  render();
+  timer = setInterval(updateTimer, 1000);
+  saveState();
+}
+
+function resumeQuiz() {
+  const state = loadState();
+  if (!state || !state.questions) return startQuiz(false);
+  questions = state.questions;
+  answers = state.answers;
+  idx = state.idx || 0;
+  start = state.start || Date.now();
+  submitted = false;
+  isRetryMode = !!state.isRetryMode;
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  const s = Math.floor((Date.now() - start) / 1000);
+  const m = String(Math.floor(s / 60)).padStart(2, '0');
+  const sec = String(s % 60).padStart(2, '0');
+  $('timer').textContent = m + ':' + sec;
+}
+
+function render() {
+  const q = questions[idx];
+  $('qtopic').textContent = q.topic;
+  $('qtext').textContent = q.stem;
+  $('counter').textContent = (idx + 1) + ' / ' + questions.length;
+  $('progressFill').style.width = ((idx + 1) / questions.length * 100) + '%';
+  const letters = ['A', 'B', 'C', 'D', 'E'];
+  $('choices').innerHTML = q.options.map((opt, i) => {
+    const sel = answers[idx] === i ? ' selected' : '';
+    let extra = '';
+    if (q.revealed) {
+      if (opt.orig === q.answer) extra = ' correctChoice';
+      else if (answers[idx] === i) extra = ' wrongChoice';
+    }
+    return `<div class="choice${sel}${extra}" onclick="selectChoice(${i})">
+      <div class="radio"></div>
+      <div class="letter">${letters[i]}</div>
+      <div class="choiceText">${opt.text}</div>
+    </div>`;
+  }).join('');
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  if (q.revealed) {
+    const correct = answers[idx] !== null && q.options[answers[idx]].orig === q.answer;
+    fb.classList.add('show', correct ? 'good' : 'bad');
+    fb.innerHTML = `<div class="feedbackTitle">${correct ? '✓ Correct' : '✗ Incorrect'}</div>
+      <div class="feedbackAnswer">Answer: ${q.options.find(o => o.orig === q.answer).text}</div>`;
+  }
+  $('nextBtn').textContent = q.revealed ? (idx === questions.length - 1 ? 'Finish →' : 'Next →') : 'Check Answer →';
+  saveState();
+}
+
+function selectChoice(i) {
+  if (questions[idx].revealed) return;
+  answers[idx] = i;
+  render();
+}
+
+function nextQ() {
+  const q = questions[idx];
+  if (!q.revealed) {
+    if (answers[idx] === null) return;
+    q.revealed = true;
+    render();
+    return;
+  }
+  if (idx < questions.length - 1) {
+    idx++;
+    render();
+  } else {
+    submitQuiz();
+  }
+}
+
+function prevQ() {
+  if (idx > 0) {
+    idx--;
+    render();
+  }
+}
+
+function submitQuiz() {
+  clearInterval(timer);
+  submitted = true;
+  saveState();
+  let correct = 0, wrong = 0, skip = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === null) skip++;
+    else if (q.options[answers[i]].orig === q.answer) correct++;
+    else wrong++;
+  });
+  const pct = Math.round(correct / questions.length * 100);
+  $('quiz').style.display = 'none';
+  $('result').style.display = 'block';
+  $('scoreNum').textContent = pct + '%';
+  $('ring').style.setProperty('--deg', (pct * 3.6) + 'deg');
+  $('correctN').textContent = correct;
+  $('wrongN').textContent = wrong;
+  $('skipN').textContent = skip;
+  $('resultTitle').textContent = pct >= 70 ? 'Great job!' : pct >= 50 ? 'Keep practicing' : 'Review needed';
+  $('resultSub').textContent = correct + ' / ' + questions.length + ' correct';
+  $('retryWrongBtn').style.display = (wrong + skip > 0) ? 'inline-block' : 'none';
+  buildReview();
+  clearState();
+}
+
+function buildReview() {
+  const rev = $('review');
+  rev.innerHTML = '<h3 style="margin:20px 0 10px">Full Review</h3>';
+  questions.forEach((q, i) => {
+    const ans = answers[i];
+    const isCorrect = ans !== null && q.options[ans].orig === q.answer;
+    const userAns = ans === null ? '— Unanswered' : q.options[ans].text;
+    const correctAns = q.options.find(o => o.orig === q.answer).text;
+    rev.innerHTML += `<div class="reviewItem ${isCorrect ? 'correct' : 'wrong'}">
+      <div class="rmeta">${q.topic} • Q${i + 1}</div>
+      <div class="rstem">${q.stem}</div>
+      <div class="ranswer">
+        ${isCorrect ? '<span class="green">✓ ' + userAns + '</span>' :
+          '<span class="red">✗ Your answer: ' + userAns + '</span><br><span class="green">Correct: ' + correctAns + '</span>'}
+      </div>
+    </div>`;
+  });
+}
+
+function retryWrong() {
+  const wrongQs = questions.filter((q, i) => {
+    const ans = answers[i];
+    return ans === null || q.options[ans].orig !== q.answer;
+  }).map(q => ({
+    ...q,
+    options: shuffle(q.options.map(o => ({ text: o.text, orig: o.orig }))),
+    revealed: false
+  }));
+  if (!wrongQs.length) return;
+  questions = shuffle(wrongQs);
+  answers = Array(questions.length).fill(null);
+  idx = 0;
+  start = Date.now();
+  submitted = false;
+  isRetryMode = true;
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(updateTimer, 1000);
+  saveState();
+}
+
+// Auto-resume check on load
+document.addEventListener('DOMContentLoaded', () => {
+  $('statN').textContent = BANK.length;
+  $('totalPill').textContent = BANK.length + ' questions';
+  showHomeWithResume();
+});
+</script>
+</body>
+</html>

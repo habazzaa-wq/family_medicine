@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Figtree", "Segoe UI", system-ui, sans-serif;
+
+  --color-bg: #f3eee6;
+  --color-bg-elevated: #faf7f2;
+  --color-ink: #1c1917;
+  --color-muted: #6b645c;
+  --color-subtle: #8a8278;
+  --color-line: #ddd4c6;
+  --color-line-strong: #c9bdaa;
+  --color-accent: #0f766e;
+  --color-accent-fg: #f4efe6;
+  --color-accent-soft: #d7efe9;
+  --color-ok: #166534;
+  --color-ok-soft: #dcfce7;
+  --color-bad: #9f1239;
+  --color-bad-soft: #ffe4e6;
+  --color-warn: #92400e;
+  --color-warn-soft: #fef3c7;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
+}
+
+@layer base {
+  html {
+    background: var(--color-bg);
+    color: var(--color-ink);
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-ink);
+    min-height: 100dvh;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

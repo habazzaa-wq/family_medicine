@@ -1,0 +1,491 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MedBank • Cardio + Chest</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#102033;--muted:#6b7a90;--line:#e5eaf1;--primary:#2563eb;--good:#16a34a;--bad:#dc2626;--goodbg:#ecfdf3;--badbg:#fef2f2;--shadow:0 18px 50px rgba(16,32,51,.10)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#eef5ff 0,#f5f7fb 40%,#f7f8fb 100%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+button{font:inherit}
+.app{max-width:1100px;margin:auto;padding:22px 16px 50px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#2563eb,#06b6d4);display:grid;place-items:center;color:#fff;font-weight:900;font-size:23px;box-shadow:0 10px 25px rgba(37,99,235,.25)}
+h1{font-size:20px;margin:0 0 3px}
+.sub{font-size:12px;color:var(--muted)}
+.pill{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-size:12px;color:var(--muted)}
+.hero,.quiz,.result{background:rgba(255,255,255,.94);border:1px solid rgba(229,234,241,.95);border-radius:24px;box-shadow:var(--shadow)}
+.hero{padding:34px 30px;margin-top:18px}
+.hero h2{font-size:34px;line-height:1.1;margin:0 0 10px}
+.hero p{color:var(--muted);max-width:680px;line-height:1.7}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.stat{padding:12px 15px;border:1px solid var(--line);border-radius:15px;background:#fafcff;min-width:110px}
+.stat b{display:block;font-size:19px}
+.stat span{font-size:11px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:0;border-radius:14px;padding:13px 18px;cursor:pointer;font-weight:800;transition:.2s}
+.btn.primary{background:linear-gradient(135deg,var(--primary),#06b6d4);color:#fff;box-shadow:0 10px 25px rgba(37,99,235,.2)}
+.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.quiz{padding:18px;display:none}
+.barrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.progress{height:9px;background:#edf1f6;border-radius:999px;overflow:hidden;flex:1}
+.progress>div{height:100%;background:linear-gradient(90deg,#2563eb,#06b6d4);width:0;transition:.25s}
+.counter{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+.qcard{border:1px solid var(--line);border-radius:20px;padding:25px;background:#fff}
+.topic{display:inline-flex;padding:6px 10px;border-radius:999px;background:#eef5ff;color:#2563eb;font-size:11px;font-weight:800;margin-bottom:13px}
+.qtext{font-size:22px;line-height:1.55;font-weight:800;margin:0 0 20px}
+.choices{display:grid;gap:11px}
+.choice{border:1.5px solid #dfe5ed;border-radius:16px;padding:15px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:.18s;background:#fff}
+.choice:hover{border-color:#9bb7ef;background:#f8fbff}
+.choice.selected{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.radio{width:22px;height:22px;border:2px solid #b8c2d1;border-radius:50%;flex:none;display:grid;place-items:center}
+.selected .radio{border-color:#2563eb}
+.selected .radio:after{content:"";width:10px;height:10px;background:#2563eb;border-radius:50%}
+.letter{width:25px;height:25px;border-radius:8px;background:#f0f3f8;display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
+.selected .letter{background:#dbeafe;color:#1d4ed8}
+.choiceText{line-height:1.55;flex:1}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.nav .btn{min-width:120px}
+.timer{font-variant-numeric:tabular-nums;font-weight:900}
+.result{display:none;padding:30px}
+.score{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ringbox{position:relative;width:150px;height:150px}
+.ring{width:150px;height:150px;border-radius:50%;background:conic-gradient(#2563eb var(--deg),#e8edf5 0);display:grid;place-items:center}
+.ring:after{content:"";width:116px;height:116px;border-radius:50%;background:#fff;position:absolute;left:17px;top:17px}
+.ringnum{position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-size:30px;font-weight:900}
+.result h2{font-size:30px;margin:0 0 5px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
+.metric{border:1px solid var(--line);border-radius:16px;padding:15px}
+.metric b{font-size:22px}
+.metric small{display:block;color:var(--muted);margin-top:3px}
+.review{margin-top:25px}
+.reviewItem{border:1px solid var(--line);border-radius:17px;padding:17px;margin:10px 0;background:#fff}
+.reviewItem.correct{border-color:#bbf7d0;background:var(--goodbg)}
+.reviewItem.wrong{border-color:#fecaca;background:var(--badbg)}
+.rmeta{font-size:11px;font-weight:900;color:var(--muted);margin-bottom:6px}
+.rstem{font-weight:800;line-height:1.5}
+.ranswer{margin-top:8px;font-size:13px}
+.green{color:var(--good);font-weight:800}
+.red{color:var(--bad);font-weight:800}
+.footnote{margin-top:16px;color:var(--muted);font-size:11px;line-height:1.6}
+.resumeBanner{display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:14px 18px;margin-bottom:16px;font-size:14px;line-height:1.5}
+.resumeBanner strong{color:#1d4ed8}
+@media(max-width:650px){.app{padding:12px 10px 35px}.hero{padding:24px 19px}.hero h2{font-size:27px}.qcard{padding:19px}.qtext{font-size:18px}.metrics{grid-template-columns:1fr}.nav .btn{min-width:0;flex:1}.top .pill{display:none}}
+.feedback{display:none;margin-top:18px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);line-height:1.6}
+.feedback.show{display:block}
+.feedback.good{background:var(--goodbg);border-color:#bbf7d0}
+.feedback.bad{background:var(--badbg);border-color:#fecaca}
+.feedbackTitle{font-weight:900;margin-bottom:4px}
+.feedbackAnswer{font-weight:800}
+.choice.correctChoice{background:var(--goodbg);border-color:#86efac}
+.choice.wrongChoice{background:var(--badbg);border-color:#fca5a5}
+.choice.correctChoice .radio{border-color:var(--good);background:var(--good)}
+.choice.wrongChoice .radio{border-color:var(--bad);background:var(--bad)}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <h1>MedBank</h1>
+        <div class="sub">Cardio + Chest • Offline Question Bank</div>
+      </div>
+    </div>
+    <div class="pill">64 reconstructed questions</div>
+  </div>
+
+  <section id="home" class="hero">
+    <div class="topic">MEDICAL EXAM MODE</div>
+    <h2>Cardio + Chest Question Bank</h2>
+    <p>Questions are shuffled every time. Your answers stay hidden until you submit. At the end, you get your score and a full red/green review. <strong>Progress is saved automatically</strong> — if you close the page and open the <em>same HTML file</em> again (double-click it from the folder), the quiz resumes exactly where you left off.</p>
+    <div id="resumeBanner" class="resumeBanner"></div>
+    <div class="stats">
+      <div class="stat"><b>64</b><span>Questions</span></div>
+      <div class="stat"><b>∞</b><span>Attempts</span></div>
+      <div class="stat"><b>⏱</b><span>Timer</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="startBtn" onclick="startQuiz(false)">🚀 Start Exam</button>
+      <button class="btn secondary" onclick="startQuiz(true)">🔀 Fresh shuffle</button>
+      <button class="btn secondary" id="resumeBtn" style="display:none" onclick="resumeQuiz()">▶ Continue last attempt</button>
+    </div>
+    <div class="footnote">The source PDFs contain cropped/partially unreadable scans in places. Those fragments are not forced into the bank; the goal here is a clean, solvable bank rather than invented or incomplete choices.</div>
+  </section>
+
+  <section id="quiz" class="quiz">
+    <div class="barrow">
+      <div class="timer" id="timer">00:00</div>
+      <div class="progress"><div id="progressFill"></div></div>
+      <div class="counter" id="counter">1 / 64</div>
+    </div>
+    <div class="qcard">
+      <div class="topic" id="qtopic">Cardio</div>
+      <h2 class="qtext" id="qtext"></h2>
+      <div class="choices" id="choices"></div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+    <div class="nav">
+      <button class="btn secondary" onclick="prevQ()">← Previous</button>
+      <button id="nextBtn" class="btn primary" onclick="nextQ()">Check Answer →</button>
+      <button class="btn primary" onclick="submitQuiz()">Submit ✓</button>
+    </div>
+  </section>
+
+  <section id="result" class="result">
+    <div class="score">
+      <div class="ringbox">
+        <div class="ring" id="ring"></div>
+        <div class="ringnum" id="scoreNum">0%</div>
+      </div>
+      <div>
+        <div class="topic">RESULT</div>
+        <h2 id="resultTitle">Your result</h2>
+        <div id="resultSub" class="sub"></div>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><b id="correctN">0</b><small>Correct</small></div>
+      <div class="metric"><b id="wrongN">0</b><small>Wrong</small></div>
+      <div class="metric"><b id="skipN">0</b><small>Unanswered</small></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz(true)">🔄 New shuffled attempt</button>
+      <button class="btn secondary" id="retryWrongBtn" style="display:none" onclick="retryWrong()">🔁 Retry wrong questions only</button>
+    </div>
+    <div class="review">
+      <h3>Answer review</h3>
+      <div id="reviewList"></div>
+    </div>
+    <div class="footnote">Green = correct answer. Red = your incorrect choice. Correct answers are hidden until submission.</div>
+  </section>
+</main>
+
+<script>
+const STORAGE_KEY = 'medbank_cardio_chest_v3';
+const BANK = [{"topic":"Cardio","stem":"A patient with R.F comes with dancing movement. How can you explain this movement?","options":["Myopathy","Neuromuscular junction disease","Sydenham's chorea","Psychosis"],"answer":2,"id":1},{"topic":"Cardio","stem":"Which of the following describes a ventricular septal defect murmur?","options":["Holosystolic murmur","Ejection systolic murmur","Systolic-diastolic murmur","Early diastolic murmur"],"answer":0,"id":2},{"topic":"Cardio","stem":"Beck triad (the 3 Ds: distended neck veins, distant heart sounds and decreased blood pressure) is present in which of the following?","options":["Congestive heart failure (CHF)","Cardiac shock","Cardiomyopathy","Cardiac Tamponade © ssi OC"],"answer":3,"id":3},{"topic":"Cardio","stem":"Typical features of acute pericarditis:","options":["Chest pain is identical to myocardial infarction","Friction rub best heard over lower sternal border at mid-expiration","ECG changes only seen in anterior chest leads","Elevation of serum creatine kinase"],"answer":1,"id":4},{"topic":"Cardio","stem":"Fever, clubbing and Osler's nodes occur in:","options":["Leptospirosis","Typhoid fever","Infective endocarditis","Rheumatic fever"],"answer":2,"id":5},{"topic":"Cardio","stem":"The aortic component of the second heart sound in aortic stenosis is:","options":["Soft","Accentuated","Wide fixed splitting","ariable"],"answer":0,"id":6},{"topic":"Cardio","stem":"The ventricular repolarization in ECG (electrocardiography) is","options":["P wave","Q wave","T wave","R wave"],"answer":2,"id":7},{"topic":"Cardio","stem":"Which of the following conditions is most closely associated with weight gain, nausea, and a decrease in urine output?","options":["Angina pectoris","Cardiomyopathy","Left-sided heart failure","Right-sided heart failure"],"answer":3,"id":8},{"topic":"Cardio","stem":"Amyloid and sarcoid are what type of cardiomyopathy?","options":["Infiltrative","Congested","Dilated","Hypertrophic"],"answer":0,"id":9},{"topic":"Cardio","stem":"A 58-year-old man with a history of old anterior myocardial infarction had severely reduced systolic function on echocardiography. Which ejection fraction is most likely?","options":["55%","50%","40%","25%"],"answer":3,"id":10},{"topic":"Cardio","stem":"Which of the following tests is the standard for the","options":["Echocardiography","ECG. C)","Endomyocardial biopsy","Electrocardiogram O w1*"],"answer":2,"id":11},{"topic":"Cardio","stem":"In a patient suffering from congenital cyanotic heart disease who has to go for a dental procedure, when are prophylactic drugs given?","options":["One hour before operation","7 days before operation","3 hours before operation","1 day before operation"],"answer":1,"id":12},{"topic":"Cardio","stem":"The causative organism of rheumatic heart disease associated with rheumatic fever is:","options":["Beta-hemolytic staphylococci","Beta-hemolytic streptococci","Alpha-hemolytic streptococci","Gamma-hemolytic streptococci"],"answer":1,"id":13},{"topic":"Cardio","stem":"De Musset sign in aortic regurgitation is:","options":["Bobbing of the head","Nail pulsation","Neck pulsation","Pulsatile hepatomegaly"],"answer":1,"id":14},{"topic":"Cardio","stem":"A 52-year-old woman arrived at the ER with repeated syncopal attacks and a history of exertional chest pain. Her pulse was 84 bpm and of small volume. What is the most likely diagnosis?","options":["Aortic regurgitation","Mitral regurgitation","Aortic stenosis","Tricuspid regurgitation"],"answer":0,"id":15},{"topic":"Cardio","stem":"What is the function of the AV node?","options":["Serve as a back-up pacemaker","Limit fibrillation entry into ventricles","Delay the action potential to allow ventricular filling","All of the above"],"answer":3,"id":16},{"topic":"Cardio","stem":"A 58-year-old man with a history of old anterior myocardial infarction had severely reduced left ventricular systolic function. Which is the correct answer?","options":["Dilated left ventricle with ejection fraction 60%","Normal-sized left ventricle with ejection fraction 55%","Hypertrophied left ventricle with ejection fraction 50%","Dilated left ventricle with ejection fraction 30%"],"answer":3,"id":17},{"topic":"Cardio","stem":"A 33-year-old man with no past medical history is admitted for flu-like symptoms, shortness of breath, fatigue, and leg edema. Which diagnosis is suspected?","options":["iral myocarditis @)","Acute rheumatic fever","Systemic lupus C)","Myocardial infarction ()"],"answer":0,"id":18},{"topic":"Chest","stem":"Which of the following drug classes are not considered primary therapy of asthma and are more often used as alternatives when control of asthma cannot be achieved by first-line therapy?","options":["BA","Leukotriene modifiers","Theophylline/methylxanthines","ICSs and Leukotriene © modifiers"],"answer":3,"id":19},{"topic":"Chest","stem":"A study of persons with a history of mining occupational exposure to inhaled dusts is performed. The dust consists of 1–5 micron inert, insoluble particles; fibrosis occurs with large amounts of accumulation, mainly in upper lobes. What is the dust?","options":["lron","coal dust @)","Carbon","Sulfur dioxide","Lesl"],"answer":1,"id":20},{"topic":"Chest","stem":"Neurological and behavioral findings in patients with hypoxia include:","options":["Drowsiness","Tremor and asterixis","Verbal language loss","Other"],"answer":1,"id":21},{"topic":"Chest","stem":"Which of the following is not considered a routine investigation in patients with suspected respiratory failure?","options":["Arterial blood gas analysis","Right-sided heart © catheterization","Electrocardiography","esl"],"answer":2,"id":22},{"topic":"Chest","stem":"Which one of the following is true regarding CT chest with intravenous contrast for radiological assessment of lung cancer?","options":["CT is superior to MRI chest for radiological assessment of suspected lung cancer.","CT is often used in the routine work-up of suspected lung cancer.","CT chest with contrast is non-efficient for evaluation of adenopathy.","Upper abdominal pathology such as metastatic lesions in the liver, adrenals, and kidneys."],"answer":2,"id":23},{"topic":"Chest","stem":"What is the most diagnostic feature in case of urinothorax?","options":["kidney with retroperitoneal urine O leak","Resolves after treatment of O obstruction","PH usually low","Pleural fluid creatinine > serum © creatinine is diagnostic"],"answer":3,"id":24},{"topic":"Chest","stem":"Which of the following is true regarding pulmonary circulation?","options":["It is a low-pressure system that allows for improved gas exchange.","It is the larger of the two circulatory systems.","The system functions with increased arterial pressure to circulate through the distal parts of the body.","It consists of the left side of the heart, the aorta, and its branches."],"answer":0,"id":25},{"topic":"Chest","stem":"Pulmonary capillary wedge pressure (PCWP) in ARDS is:","options":["20 mmHg","<18 mmHg","32 mmHg","10 mmHg"],"answer":1,"id":26},{"topic":"Chest","stem":"Theophylline use is limited by which of the following?","options":["The need to constantly monitor serum levels","A narrow therapeutic index","Numerous drug and disease interactions","All of the above"],"answer":1,"id":27},{"topic":"Chest","stem":"Which of the following is true about surgical management of bronchiectasis?","options":["It indicated in unilateral bronchiectasis","It indicated in central bronchiectasis","It indicated in peripheral x bronchiectasis","It indicated in localized bronchiectasis"],"answer":3,"id":28},{"topic":"Chest","stem":"Regarding the drug interaction of theophylline, the half-life of theophylline is decreased by which of the following?","options":["Erythromycin","Phenobarbitone","Quinolones","Cimetidine"],"answer":1,"id":29},{"topic":"Chest","stem":"Which one of the following is not true regarding lung tumors?","options":["The most common benign lung tumors are pulmonary hamartomas, lung neurofibromas, or lipomas","70% of lung tumors are malignant","Bronchogenic carcinomas often present late when local invasion and metastases are already present","5-year survival is less than 15%"],"answer":1,"id":30},{"topic":"Chest","stem":"Which of the following is the most accurate about a small pleural effusion for which thoracocentesis is not required?","options":["Recent thoracic or abdominal surgery","Too small to safely aspirate","In clinically stable patients","Presence can be explained by underlying congestive heart failure"],"answer":1,"id":31},{"topic":"Chest","stem":"Which one of the following is NOT a symptom of hypoxemia?","options":["Cyanosis ()","Headache","Irregular heartbeats. ()","Increased energy"],"answer":1,"id":32},{"topic":"Cardio","stem":"What is the most common cause of ventricular tachycardia (VT)?","options":["Myocardial ischemia","Electrolytes imbalance","Renal failure","Interstitial pulmonary fibrosis","ther"],"answer":0,"id":33},{"topic":"Cardio","stem":"Early afterdepolarizations are developed in:","options":["Phase 0","Phase","Phase 2 or 3","Phase 1","ther"],"answer":2,"id":34},{"topic":"Cardio","stem":"A 45-year-old man presented to the outpatient clinic complaining of bilateral lower limb edema and enlargement of abdominal contour within the previous 3 months. Examination revealed congested neck veins. This finding indicates:","options":["Decreased venous return","Increased central venous pressure","Chronic left-sided heart failure","Acute left-sided heart failure"],"answer":1,"id":35},{"topic":"Cardio","stem":"A woman was admitted to hospital with heart failure; the underlying cause was determined to be aortic stenosis. Which sign is most likely to be present?","options":["Pleural effusion","Raised jugular venous pressure","Fine basal crepitations in both lungs","Bilateral lower limb edema"],"answer":2,"id":36},{"topic":"Cardio","stem":"Which of the following tests is the standard for the diagnosis of myocarditis?","options":["Echocardiography","ECG","Endomyocardial biopsy","Electrocardiogram"],"answer":2,"id":37},{"topic":"Cardio","stem":"By echo, patients with congestive cardiomyopathy have LVs that are:","options":["Thick and hyperdynamic","Increased shortening fraction and hypertrophy","Dilated and poorly contracting","Hypertrophied with normal chamber size"],"answer":2,"id":38},{"topic":"Cardio","stem":"Which of the following represents the surface anatomy of the apex of the heart?","options":["Lies opposite the left 5th intercostal space 9 cm from the middle line","Lies opposite the right 5th intercostal space 9 cm from the middle line","Lies opposite the left 6th intercostal space","Lies opposite the 4th thoracic vertebrae"],"answer":0,"id":39},{"topic":"Cardio","stem":"The most posterior structure of the heart is:","options":["Left atrium","Right atrium","Left ventricle","Right atrial appendage"],"answer":0,"id":40},{"topic":"Cardio","stem":"Which valves are commonly affected by rheumatic fever?","options":["Tricuspid, mitral","Mitral, aortic","Tricuspid, pulmonary","Aortic, pulmonary"],"answer":2,"id":41},{"topic":"Cardio","stem":"Prophylactic antibiotic is indicated before dental extraction in the following:","options":["Coronary artery bypass","Prosthetic aortic valve","Chronic kidney disease","Liver cell failure"],"answer":1,"id":42},{"topic":"Cardio","stem":"Fever, clubbing and Osler's nodes occur in:","options":["Leptospirosis","Typhoid fever","Infective endocarditis","Rheumatic fever"],"answer":2,"id":43},{"topic":"Cardio","stem":"What kind of murmur is associated with chronic mitral valve regurgitation?","options":["Mid-systolic click and late systolic murmur heard at apex","Mid-diastolic click and late diastolic murmur heard at apex","Diastolic rumble","Holosystolic murmur"],"answer":3,"id":44},{"topic":"Cardio","stem":"In mitral stenosis, systemic embolization occurs more frequently in:","options":["Patients with atrial fibrillation (AF)","lder patients","Patients with a reduced cardiac output","A well-anticoagulated patient"],"answer":0,"id":45},{"topic":"Cardio","stem":"What is the axis of this ECG?","options":["Right axis","Normal axis","Left axis","dd axis"],"answer":1,"id":46},{"topic":"Cardio","stem":"Which of the following is true regarding pulmonary circulation?","options":["It is a low-pressure system that allows for improved gas exchange.","It is the larger of the two circulatory systems.","The system functions with increased arterial pressure to circulate through the distal parts of the body.","It consists of the left side of the heart, the aorta, and its branches."],"answer":0,"id":47},{"topic":"Cardio","stem":"Rheumatic fever usually follows an infection with:","options":["Streptococcus group A","Staphylococcus aureus","Streptococcus viridans","H. influenzae"],"answer":0,"id":48},{"topic":"Cardio","stem":"Which of the following is not a risk factor for atherosclerosis?","options":["Cancer","Diabetes","Smoking","Hypercholesterolemia"],"answer":0,"id":49},{"topic":"Cardio","stem":"Atherosclerosis occurs primarily in:","options":["eins","Capillaries","Arteries","enules"],"answer":2,"id":50},{"topic":"Cardio","stem":"Which of these factors is not a risk factor for ischemic heart disease?","options":["Smoking","Diabetes (type 1 and 2)","Hypertension","Being female"],"answer":3,"id":51},{"topic":"Cardio","stem":"Which of the following is not part of an atherosclerotic plaque?","options":["Fibrous cap","Cholesterol accumulation","Lipid core","Platelets"],"answer":3,"id":52},{"topic":"Cardio","stem":"The best tool for evaluation of posterior cardiac structures is:","options":["Transthoracic echocardiography","ECG","Chest X-ray","Transesophageal echocardiography"],"answer":3,"id":53},{"topic":"Cardio","stem":"The most common complication post cardiac surgery is:","options":["Bleeding","Infection","Stroke","Arrhythmias"],"answer":0,"id":54},{"topic":"Cardio","stem":"Echocardiography can be used for:","options":["Removing an embolus from the heart","Correctly locating blockages in the arteries and veins","Assessing the baby’s heart anatomy and function","Measuring heartbeat"],"answer":2,"id":55},{"topic":"Cardio","stem":"A 58-year-old man with a history of old anterior myocardial infarction has severely reduced systolic function. Which ejection fraction is most likely?","options":["%","%","%","%"],"answer":3,"id":56},{"topic":"Cardio","stem":"The ventricular repolarization in ECG (electrocardiography) is best seen in:","options":["P wave","Q wave","T wave","R wave"],"answer":2,"id":57},{"topic":"Cardio","stem":"Which condition is most closely associated with weight gain, nausea, and a decrease in urine output?","options":["Angina pectoris","Cardiomyopathy","Left-sided heart failure","Right-sided heart failure"],"answer":3,"id":58},{"topic":"Chest","stem":"What blood vessel carries deoxygenated blood from the heart to the lungs?","options":["Pulmonary vein","Aorta","Pulmonary artery","ena cava"],"answer":2,"id":59},{"topic":"Chest","stem":"What is the most appropriate place in therapy for long-acting beta-agonists?","options":["As monotherapy","As rescue therapy","In combination with ICSs","In combination with cromolyn"],"answer":2,"id":60},{"topic":"Chest","stem":"Which test is NOT used during diagnosis or monitoring of asthma?","options":["Diffusing capacity","Peak expiratory flow rate","Bronchial challenge test","Skin prick test"],"answer":0,"id":61},{"topic":"Chest","stem":"What is the cause of localized bronchiectasis?","options":["Recurrent chest infection","Foreign body aspiration","Cystic fibrosis","Allergic bronchopulmonary aspergillosis"],"answer":1,"id":62},{"topic":"Chest","stem":"Which of the following is not involved in interstitial lung diseases?","options":["Capillary endothelium","Perivascular tissues","Lymphatic tissues","Pleura"],"answer":3,"id":63},{"topic":"Chest","stem":"What is the gold standard test for bronchiectasis?","options":["Chest X-ray","High-resolution CT chest","ECG","Spirometry"],"answer":1,"id":64}];
+
+let questions = [], answers = [], idx = 0, start = 0, timer = null, submitted = false, isRetryMode = false;
+const $ = id => document.getElementById(id);
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function saveState() {
+  if (submitted) {
+    // Keep result state briefly so resume works if they leave after finishing
+    const state = {
+      questions,
+      answers,
+      idx,
+      start,
+      submitted: true,
+      isRetryMode,
+      savedAt: Date.now()
+    };
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+    return;
+  }
+  if (!questions.length) return;
+  const state = {
+    questions,
+    answers,
+    idx,
+    start,
+    submitted: false,
+    isRetryMode,
+    savedAt: Date.now()
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function showHomeWithResume() {
+  const state = loadState();
+  const banner = $('resumeBanner');
+  const resumeBtn = $('resumeBtn');
+  if (state && state.questions && state.questions.length && !state.submitted) {
+    const done = state.answers.filter(a => a !== null).length;
+    const total = state.questions.length;
+    banner.style.display = 'block';
+    banner.innerHTML = '<strong>Last attempt found</strong> — You were on question ' + (state.idx + 1) + ' of ' + total +
+      ' (' + done + ' answered). You can continue or start a fresh exam.';
+    resumeBtn.style.display = 'inline-block';
+  } else {
+    banner.style.display = 'none';
+    resumeBtn.style.display = 'none';
+  }
+}
+
+function startQuiz(forceFresh) {
+  clearInterval(timer);
+  submitted = false;
+  isRetryMode = false;
+  idx = 0;
+  start = Date.now();
+  if (forceFresh) clearState();
+  questions = shuffle(BANK.map(q => ({
+    ...q,
+    options: shuffle(q.options.map((text, i) => ({ text, orig: i }))),
+    revealed: false
+  })));
+  answers = Array(questions.length).fill(null);
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resumeQuiz() {
+  const state = loadState();
+  if (!state || !state.questions || !state.questions.length || state.submitted) {
+    startQuiz(true);
+    return;
+  }
+  clearInterval(timer);
+  questions = state.questions;
+  answers = state.answers;
+  idx = Math.min(state.idx || 0, questions.length - 1);
+  start = state.start || Date.now();
+  submitted = false;
+  isRetryMode = !!state.isRetryMode;
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retryWrong() {
+  // Collect wrong + unanswered questions from current finished attempt
+  const wrongQs = [];
+  questions.forEach((q, i) => {
+    const selected = answers[i];
+    const isCorrect = selected !== null && q.options[selected].orig === q.answer;
+    if (!isCorrect) {
+      // Rebuild a clean copy so revealed state is reset and options can be reshuffled
+      const original = BANK.find(b => b.id === q.id) || q;
+      wrongQs.push({
+        topic: original.topic,
+        stem: original.stem,
+        options: original.options.slice(),
+        answer: original.answer,
+        id: original.id
+      });
+    }
+  });
+  if (!wrongQs.length) {
+    alert('No wrong or unanswered questions to retry!');
+    return;
+  }
+  clearInterval(timer);
+  submitted = false;
+  isRetryMode = true;
+  idx = 0;
+  start = Date.now();
+  questions = shuffle(wrongQs.map(q => ({
+    ...q,
+    options: shuffle(q.options.map((text, i) => ({ text, orig: i }))),
+    revealed: false
+  })));
+  answers = Array(questions.length).fill(null);
+  $('result').style.display = 'none';
+  $('home').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function tick() {
+  let s = Math.floor((Date.now() - start) / 1000);
+  let m = Math.floor(s / 60);
+  let sec = s % 60;
+  $('timer').textContent = String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+}
+
+function render() {
+  const q = questions[idx];
+  $('qtopic').textContent = q.topic + (isRetryMode ? ' • Retry wrong' : '');
+  $('qtext').textContent = q.stem;
+  $('counter').textContent = (idx + 1) + ' / ' + questions.length;
+  $('progressFill').style.width = ((idx + 1) / questions.length * 100) + '%';
+  const box = $('choices');
+  box.innerHTML = '';
+  const revealed = q.revealed === true;
+  q.options.forEach((o, i) => {
+    const d = document.createElement('div');
+    let cls = 'choice' + (answers[idx] === i ? ' selected' : '');
+    if (revealed) {
+      if (o.orig === q.answer) cls += ' correctChoice';
+      else if (answers[idx] === i) cls += ' wrongChoice';
+    }
+    d.className = cls;
+    d.onclick = () => {
+      if (!q.revealed) {
+        answers[idx] = i;
+        saveState();
+        render();
+      }
+    };
+    d.innerHTML = '<div class="radio"></div><div class="letter">' + String.fromCharCode(65 + i) + '</div><div class="choiceText"></div>';
+    d.querySelector('.choiceText').textContent = o.text;
+    box.appendChild(d);
+  });
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  if (revealed) {
+    const selected = answers[idx];
+    const correctText = q.options.find(o => o.orig === q.answer).text;
+    if (selected !== null && q.options[selected].orig === q.answer) {
+      fb.classList.add('show', 'good');
+      fb.innerHTML = '<div class="feedbackTitle">✓ Correct answer</div><div>You chose <span class="feedbackAnswer">' + esc(q.options[selected].text) + '</span> — that is the correct answer.</div>';
+    } else if (selected === null) {
+      fb.classList.add('show', 'bad');
+      fb.innerHTML = '<div class="feedbackTitle">Correct answer</div><div>You did not select an answer.</div><div class="feedbackAnswer">✓ ' + esc(correctText) + '</div>';
+    } else {
+      fb.classList.add('show', 'bad');
+      fb.innerHTML = '<div class="feedbackTitle">✕ Not quite</div><div>Your answer: <span class="feedbackAnswer">' + esc(q.options[selected].text) + '</span></div><div>Correct answer: <span class="feedbackAnswer">' + esc(correctText) + '</span></div>';
+    }
+  }
+  $('nextBtn').textContent = revealed
+    ? (idx < questions.length - 1 ? 'Next Question →' : 'Finish & See Result →')
+    : 'Check Answer →';
+  saveState();
+}
+
+function nextQ() {
+  const q = questions[idx];
+  if (!q.revealed) {
+    if (answers[idx] === null) {
+      const fb = $('feedback');
+      fb.className = 'feedback show bad';
+      fb.innerHTML = '<div class="feedbackTitle">Choose an answer first</div><div>Select one of the options, then press <b>Check Answer</b>.</div>';
+      return;
+    }
+    q.revealed = true;
+    saveState();
+    render();
+    return;
+  }
+  if (idx < questions.length - 1) {
+    idx++;
+    saveState();
+    render();
+    scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    submitQuiz();
+  }
+}
+
+function prevQ() {
+  if (idx > 0) {
+    idx--;
+    saveState();
+    render();
+    scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function submitQuiz() {
+  if (submitted) return;
+  if (!confirm('Submit your exam and reveal the result?')) return;
+  submitted = true;
+  clearInterval(timer);
+  let c = 0, w = 0, s = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === null) s++;
+    else if (q.options[answers[i]].orig === q.answer) c++;
+    else w++;
+  });
+  let pct = Math.round(c / questions.length * 100);
+  $('quiz').style.display = 'none';
+  $('result').style.display = 'block';
+  $('scoreNum').textContent = pct + '%';
+  $('ring').style.setProperty('--deg', (pct * 3.6) + 'deg');
+  $('correctN').textContent = c;
+  $('wrongN').textContent = w;
+  $('skipN').textContent = s;
+  $('resultTitle').textContent = pct >= 85 ? 'Excellent work 🔥' : pct >= 70 ? 'Very good 💪' : pct >= 50 ? 'Good start — review your mistakes' : 'Keep going — one more round will help';
+  $('resultSub').textContent = c + ' / ' + questions.length + ' correct • ' + pct + '%' + (isRetryMode ? ' (Retry mode)' : '');
+  const retryBtn = $('retryWrongBtn');
+  if (w + s > 0) {
+    retryBtn.style.display = 'inline-block';
+    retryBtn.textContent = '🔁 Retry wrong questions only (' + (w + s) + ')';
+  } else {
+    retryBtn.style.display = 'none';
+  }
+  buildReview();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildReview() {
+  const box = $('reviewList');
+  box.innerHTML = '';
+  questions.forEach((q, i) => {
+    const selected = answers[i];
+    const ok = selected !== null && q.options[selected].orig === q.answer;
+    const d = document.createElement('div');
+    d.className = 'reviewItem ' + (ok ? 'correct' : 'wrong');
+    let h = '<div class="rmeta">Question ' + (i + 1) + ' • ' + q.topic + '</div><div class="rstem">' + esc(q.stem) + '</div>';
+    if (selected === null) h += '<div class="ranswer red">Not answered</div>';
+    else if (ok) h += '<div class="ranswer green">✓ Correct: ' + esc(q.options[selected].text) + '</div>';
+    else h += '<div class="ranswer"><span class="red">✕ Your answer: ' + esc(q.options[selected].text) + '</span><br><span class="green">✓ Correct answer: ' + esc(q.options.find(o => o.orig === q.answer).text) + '</span></div>';
+    d.innerHTML = h;
+    box.appendChild(d);
+  });
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+}
+
+// On page load: auto-resume unfinished attempt, otherwise show home
+(function init() {
+  const state = loadState();
+  if (state && state.questions && state.questions.length && !state.submitted) {
+    // Unfinished attempt → jump straight into the quiz
+    resumeQuiz();
+  } else if (state && state.submitted) {
+    // Finished last time → show home (they can start new or we could show result, but home is cleaner)
+    showHomeWithResume();
+  } else {
+    showHomeWithResume();
+  }
+})();
+</script>
+</body>
+</html>

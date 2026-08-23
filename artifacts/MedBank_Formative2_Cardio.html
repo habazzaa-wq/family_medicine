@@ -1,0 +1,527 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MedBank • Formative 2 Cardio</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#102033;--muted:#6b7a90;--line:#e5eaf1;--primary:#e11d48;--good:#16a34a;--bad:#dc2626;--goodbg:#ecfdf3;--badbg:#fef2f2;--shadow:0 18px 50px rgba(16,32,51,.10)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#fff1f2 0,#f5f7fb 40%,#f7f8fb 100%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+button{font:inherit}
+.app{max-width:1100px;margin:auto;padding:22px 16px 50px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#e11d48,#f43f5e);display:grid;place-items:center;color:#fff;font-weight:900;font-size:23px;box-shadow:0 10px 25px rgba(225,29,72,.25)}
+h1{font-size:20px;margin:0 0 3px}
+.sub{font-size:12px;color:var(--muted)}
+.pill{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-size:12px;color:var(--muted)}
+.hero,.quiz,.result{background:rgba(255,255,255,.94);border:1px solid rgba(229,234,241,.95);border-radius:24px;box-shadow:var(--shadow)}
+.hero{padding:34px 30px;margin-top:18px}
+.hero h2{font-size:34px;line-height:1.1;margin:0 0 10px}
+.hero p{color:var(--muted);max-width:680px;line-height:1.7}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.stat{padding:12px 15px;border:1px solid var(--line);border-radius:15px;background:#fafcff;min-width:110px}
+.stat b{display:block;font-size:19px}
+.stat span{font-size:11px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:0;border-radius:14px;padding:13px 18px;cursor:pointer;font-weight:800;transition:.2s}
+.btn.primary{background:linear-gradient(135deg,#e11d48,#f43f5e);color:#fff;box-shadow:0 10px 25px rgba(225,29,72,.2)}
+.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn:hover{transform:translateY(-1px)}
+.quiz{padding:18px;display:none}
+.barrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.progress{height:9px;background:#edf1f6;border-radius:999px;overflow:hidden;flex:1}
+.progress>div{height:100%;background:linear-gradient(90deg,#e11d48,#f43f5e);width:0;transition:.25s}
+.counter{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+.qcard{border:1px solid var(--line);border-radius:20px;padding:25px;background:#fff}
+.topic{display:inline-flex;padding:6px 10px;border-radius:999px;background:#ffe4e6;color:#be123c;font-size:11px;font-weight:800;margin-bottom:13px}
+.qtext{font-size:20px;line-height:1.55;font-weight:800;margin:0 0 20px}
+.choices{display:grid;gap:11px}
+.choice{border:1.5px solid #dfe5ed;border-radius:16px;padding:15px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:.18s;background:#fff}
+.choice:hover{border-color:#fda4af;background:#fff1f2}
+.choice.selected{border-color:#e11d48;background:#fff1f2;box-shadow:0 0 0 3px rgba(225,29,72,.08)}
+.radio{width:22px;height:22px;border:2px solid #b8c2d1;border-radius:50%;flex:none;display:grid;place-items:center}
+.selected .radio{border-color:#e11d48}
+.selected .radio:after{content:"";width:10px;height:10px;background:#e11d48;border-radius:50%}
+.letter{width:25px;height:25px;border-radius:8px;background:#f0f3f8;display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
+.selected .letter{background:#ffe4e6;color:#be123c}
+.choiceText{line-height:1.55;flex:1}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.nav .btn{min-width:120px}
+.timer{font-variant-numeric:tabular-nums;font-weight:900}
+.result{display:none;padding:30px}
+.score{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ringbox{position:relative;width:150px;height:150px}
+.ring{width:150px;height:150px;border-radius:50%;background:conic-gradient(#e11d48 var(--deg),#e8edf5 0);display:grid;place-items:center}
+.ring:after{content:"";width:116px;height:116px;border-radius:50%;background:#fff;position:absolute;left:17px;top:17px}
+.ringnum{position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-size:30px;font-weight:900}
+.result h2{font-size:30px;margin:0 0 5px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
+.metric{border:1px solid var(--line);border-radius:16px;padding:15px}
+.metric b{font-size:22px}
+.metric small{display:block;color:var(--muted);margin-top:3px}
+.review{margin-top:25px}
+.reviewItem{border:1px solid var(--line);border-radius:17px;padding:17px;margin:10px 0;background:#fff}
+.reviewItem.correct{border-color:#bbf7d0;background:var(--goodbg)}
+.reviewItem.wrong{border-color:#fecaca;background:var(--badbg)}
+.rmeta{font-size:11px;font-weight:900;color:var(--muted);margin-bottom:6px}
+.rstem{font-weight:800;line-height:1.5}
+.ranswer{margin-top:8px;font-size:13px}
+.green{color:var(--good);font-weight:800}
+.red{color:var(--bad);font-weight:800}
+.footnote{margin-top:16px;color:var(--muted);font-size:11px;line-height:1.6}
+.resumeBanner{display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:16px;padding:14px 18px;margin-bottom:16px;font-size:14px;line-height:1.5}
+.resumeBanner strong{color:#be123c}
+@media(max-width:650px){.app{padding:12px 10px 35px}.hero{padding:24px 19px}.hero h2{font-size:27px}.qcard{padding:19px}.qtext{font-size:18px}.metrics{grid-template-columns:1fr}.nav .btn{min-width:0;flex:1}.top .pill{display:none}}
+.feedback{display:none;margin-top:18px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);line-height:1.6}
+.feedback.show{display:block}
+.feedback.good{background:var(--goodbg);border-color:#bbf7d0}
+.feedback.bad{background:var(--badbg);border-color:#fecaca}
+.feedbackTitle{font-weight:900;margin-bottom:4px}
+.feedbackAnswer{font-weight:800}
+.choice.correctChoice{background:var(--goodbg);border-color:#86efac}
+.choice.wrongChoice{background:var(--badbg);border-color:#fca5a5}
+.choice.correctChoice .radio{border-color:var(--good);background:var(--good)}
+.choice.wrongChoice .radio{border-color:var(--bad);background:var(--bad)}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <h1>MedBank</h1>
+        <div class="sub">Formative 2 • Cardio</div>
+      </div>
+    </div>
+    <div class="pill">10 questions</div>
+  </div>
+
+  <section id="home" class="hero">
+    <div class="topic">FORMATIVE 2 — CARDIO</div>
+    <h2>Ischemic Heart Disease & Valvular Lesions</h2>
+    <p>10 multiple-choice questions from Formative 2 Cardio. Progress is saved automatically — close and reopen to continue.</p>
+    <div id="resumeBanner" class="resumeBanner"></div>
+    <div class="stats">
+      <div class="stat"><b>10</b><span>Questions</span></div>
+      <div class="stat"><b>∞</b><span>Attempts</span></div>
+      <div class="stat"><b>⏱</b><span>Timer</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz(false)">🚀 Start Exam</button>
+      <button class="btn secondary" onclick="startQuiz(true)">🔀 Fresh shuffle</button>
+      <button class="btn secondary" id="resumeBtn" style="display:none" onclick="resumeQuiz()">▶ Continue last attempt</button>
+    </div>
+  </section>
+
+  <section id="quiz" class="quiz">
+    <div class="barrow">
+      <div class="timer" id="timer">00:00</div>
+      <div class="progress"><div id="progressFill"></div></div>
+      <div class="counter" id="counter">1 / 10</div>
+    </div>
+    <div class="qcard">
+      <div class="topic" id="qtopic">Cardio</div>
+      <h2 class="qtext" id="qtext"></h2>
+      <div class="choices" id="choices"></div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+    <div class="nav">
+      <button class="btn secondary" onclick="prevQ()">← Previous</button>
+      <button id="nextBtn" class="btn primary" onclick="nextQ()">Check Answer →</button>
+      <button class="btn primary" onclick="submitQuiz()">Submit ✓</button>
+    </div>
+  </section>
+
+  <section id="result" class="result">
+    <div class="score">
+      <div class="ringbox">
+        <div class="ring" id="ring"></div>
+        <div class="ringnum" id="scoreNum">0%</div>
+      </div>
+      <div>
+        <div class="topic">RESULT</div>
+        <h2 id="resultTitle">Your result</h2>
+        <div id="resultSub" class="sub"></div>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><b id="correctN">0</b><small>Correct</small></div>
+      <div class="metric"><b id="wrongN">0</b><small>Wrong</small></div>
+      <div class="metric"><b id="skipN">0</b><small>Unanswered</small></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz(true)">🔄 New shuffled attempt</button>
+      <button class="btn secondary" id="retryWrongBtn" style="display:none" onclick="retryWrong()">🔁 Retry wrong questions only</button>
+    </div>
+    <div class="review">
+      <h3>Answer review</h3>
+      <div id="reviewList"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const STORAGE_KEY = 'medbank_formative2_cardio_v1';
+
+const BANK = [
+  {
+    topic: "Cardio",
+    stem: "The primary underlying cause of most cases of Ischemic Heart Disease (IHD) is:",
+    options: ["Coronary artery vasospasm", "Atherosclerosis of the coronary arteries", "Valvular heart disease", "Congenital heart defects"],
+    answer: 1,
+    id: 1
+  },
+  {
+    topic: "Cardio",
+    stem: "The imbalance in Ischemic Heart Disease refers to a mismatch between:",
+    options: ["Oxygen supply and carbon dioxide removal in the lungs", "Myocardial oxygen supply and myocardial oxygen demand", "Blood glucose supply and myocardial energy demand", "Atrial and ventricular contraction rates"],
+    answer: 1,
+    id: 2
+  },
+  {
+    topic: "Cardio",
+    stem: "Organic nitrates, like nitroglycerin, primarily alleviate angina by:",
+    options: ["Increasing myocardial contractility", "Causing direct coronary artery vasoconstriction", "Reducing myocardial oxygen demand through venodilation (reducing preload) and some arteriodilation (reducing afterload)", "Blocking beta-adrenergic receptors"],
+    answer: 2,
+    id: 3
+  },
+  {
+    topic: "Cardio",
+    stem: "Which of the following beta-blockers is cardioselective (beta-1 selective)?",
+    options: ["Propranolol", "Metoprolol", "Nadolol", "Timolol"],
+    answer: 1,
+    id: 4
+  },
+  {
+    topic: "Cardio",
+    stem: "In patients with stable IHD and a history of myocardial infarction or heart failure, which class of drugs is generally recommended indefinitely (if not contraindicated) to reduce mortality?",
+    options: ["Diuretics", "Beta-blockers (evidence-based)", "Dihydropyridine calcium channel blockers as monotherapy", "Ranolazine"],
+    answer: 1,
+    id: 5
+  },
+  {
+    topic: "Cardio",
+    stem: "A crescendo-decrescendo systolic ejection murmur, radiating to the carotids, is a hallmark of:",
+    options: ["Mitral stenosis", "Aortic regurgitation", "Mitral valve prolapse", "Aortic stenosis"],
+    answer: 3,
+    id: 6
+  },
+  {
+    topic: "Cardio",
+    stem: "Pulsus parvus et tardus (a weak and delayed carotid pulse) is a clinical sign associated with severe:",
+    options: ["Mitral regurgitation", "Aortic regurgitation", "Aortic stenosis", "Tricuspid stenosis"],
+    answer: 2,
+    id: 7
+  },
+  {
+    topic: "Cardio",
+    stem: "A high-pitched, blowing, early diastolic decrescendo murmur best heard at the left sternal border is typical of:",
+    options: ["Aortic regurgitation", "Pulmonary stenosis", "Tricuspid regurgitation", "Mitral stenosis"],
+    answer: 0,
+    id: 8
+  },
+  {
+    topic: "Cardio",
+    stem: "Corrigan's pulse (water-hammer pulse) and a wide pulse-pressure are classic findings in:",
+    options: ["Mitral stenosis", "Severe aortic regurgitation", "Severe aortic stenosis", "Cardiac tamponade"],
+    answer: 1,
+    id: 9
+  },
+  {
+    topic: "Cardio",
+    stem: "A 'P mitrale' (broad, notched P wave in lead II) on an ECG is most indicative of:",
+    options: ["Right atrial enlargement", "Left ventricular hypertrophy", "Left atrial enlargement", "Right ventricular hypertrophy"],
+    answer: 2,
+    id: 10
+  }
+];
+
+let questions = [], answers = [], idx = 0, start = 0, timer = null, submitted = false, isRetryMode = false;
+const $ = id => document.getElementById(id);
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function saveState() {
+  if (!questions.length) return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      questions, answers, idx, start, submitted, isRetryMode, savedAt: Date.now()
+    }));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function clearState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function showHomeWithResume() {
+  const state = loadState();
+  const banner = $('resumeBanner');
+  const resumeBtn = $('resumeBtn');
+  if (state && state.questions && state.questions.length && !state.submitted) {
+    const done = state.answers.filter(a => a !== null).length;
+    banner.style.display = 'block';
+    banner.innerHTML = '<strong>Last attempt found</strong> — Question ' + (state.idx + 1) + ' of ' + state.questions.length + ' (' + done + ' answered).';
+    resumeBtn.style.display = 'inline-block';
+  } else {
+    banner.style.display = 'none';
+    resumeBtn.style.display = 'none';
+  }
+}
+
+function startQuiz(forceFresh) {
+  clearInterval(timer);
+  submitted = false;
+  isRetryMode = false;
+  idx = 0;
+  start = Date.now();
+  if (forceFresh) clearState();
+  questions = shuffle(BANK.map(q => ({
+    ...q,
+    options: shuffle(q.options.map((text, i) => ({ text, orig: i }))),
+    revealed: false
+  })));
+  answers = Array(questions.length).fill(null);
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resumeQuiz() {
+  const state = loadState();
+  if (!state || !state.questions || !state.questions.length || state.submitted) {
+    startQuiz(true);
+    return;
+  }
+  clearInterval(timer);
+  questions = state.questions;
+  answers = state.answers;
+  idx = Math.min(state.idx || 0, questions.length - 1);
+  start = state.start || Date.now();
+  submitted = false;
+  isRetryMode = !!state.isRetryMode;
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retryWrong() {
+  const wrongQs = [];
+  questions.forEach((q, i) => {
+    const selected = answers[i];
+    const isCorrect = selected !== null && q.options[selected].orig === q.answer;
+    if (!isCorrect) {
+      const original = BANK.find(b => b.id === q.id) || q;
+      wrongQs.push({
+        topic: original.topic,
+        stem: original.stem,
+        options: original.options.slice(),
+        answer: original.answer,
+        id: original.id
+      });
+    }
+  });
+  if (!wrongQs.length) {
+    alert('No wrong or unanswered questions to retry!');
+    return;
+  }
+  clearInterval(timer);
+  submitted = false;
+  isRetryMode = true;
+  idx = 0;
+  start = Date.now();
+  questions = shuffle(wrongQs.map(q => ({
+    ...q,
+    options: shuffle(q.options.map((text, i) => ({ text, orig: i }))),
+    revealed: false
+  })));
+  answers = Array(questions.length).fill(null);
+  $('result').style.display = 'none';
+  $('home').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(tick, 1000);
+  tick();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function tick() {
+  let s = Math.floor((Date.now() - start) / 1000);
+  $('timer').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+
+function render() {
+  const q = questions[idx];
+  $('qtopic').textContent = q.topic + (isRetryMode ? ' • Retry' : '');
+  $('qtext').textContent = q.stem;
+  $('counter').textContent = (idx + 1) + ' / ' + questions.length;
+  $('progressFill').style.width = ((idx + 1) / questions.length * 100) + '%';
+  const box = $('choices');
+  box.innerHTML = '';
+  const revealed = q.revealed === true;
+  q.options.forEach((o, i) => {
+    const d = document.createElement('div');
+    let cls = 'choice' + (answers[idx] === i ? ' selected' : '');
+    if (revealed) {
+      if (o.orig === q.answer) cls += ' correctChoice';
+      else if (answers[idx] === i) cls += ' wrongChoice';
+    }
+    d.className = cls;
+    d.onclick = () => {
+      if (!q.revealed) {
+        answers[idx] = i;
+        saveState();
+        render();
+      }
+    };
+    d.innerHTML = '<div class="radio"></div><div class="letter">' + String.fromCharCode(65 + i) + '</div><div class="choiceText"></div>';
+    d.querySelector('.choiceText').textContent = o.text;
+    box.appendChild(d);
+  });
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  if (revealed) {
+    const selected = answers[idx];
+    const correctText = q.options.find(o => o.orig === q.answer).text;
+    if (selected !== null && q.options[selected].orig === q.answer) {
+      fb.classList.add('show', 'good');
+      fb.innerHTML = '<div class="feedbackTitle">✓ Correct</div><div>You chose <span class="feedbackAnswer">' + esc(q.options[selected].text) + '</span></div>';
+    } else if (selected === null) {
+      fb.classList.add('show', 'bad');
+      fb.innerHTML = '<div class="feedbackTitle">Correct answer</div><div class="feedbackAnswer">✓ ' + esc(correctText) + '</div>';
+    } else {
+      fb.classList.add('show', 'bad');
+      fb.innerHTML = '<div class="feedbackTitle">✕ Wrong</div><div>Your answer: <span class="feedbackAnswer">' + esc(q.options[selected].text) + '</span></div><div>Correct: <span class="feedbackAnswer">' + esc(correctText) + '</span></div>';
+    }
+  }
+  $('nextBtn').textContent = revealed
+    ? (idx < questions.length - 1 ? 'Next Question →' : 'Finish & See Result →')
+    : 'Check Answer →';
+  saveState();
+}
+
+function nextQ() {
+  const q = questions[idx];
+  if (!q.revealed) {
+    if (answers[idx] === null) {
+      const fb = $('feedback');
+      fb.className = 'feedback show bad';
+      fb.innerHTML = '<div class="feedbackTitle">Choose an answer first</div>';
+      return;
+    }
+    q.revealed = true;
+    saveState();
+    render();
+    return;
+  }
+  if (idx < questions.length - 1) {
+    idx++;
+    saveState();
+    render();
+    scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    submitQuiz();
+  }
+}
+
+function prevQ() {
+  if (idx > 0) {
+    idx--;
+    saveState();
+    render();
+    scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function submitQuiz() {
+  if (submitted) return;
+  if (!confirm('Submit your exam?')) return;
+  submitted = true;
+  clearInterval(timer);
+  let c = 0, w = 0, s = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === null) s++;
+    else if (q.options[answers[i]].orig === q.answer) c++;
+    else w++;
+  });
+  const pct = Math.round(c / questions.length * 100);
+  $('quiz').style.display = 'none';
+  $('result').style.display = 'block';
+  $('scoreNum').textContent = pct + '%';
+  $('ring').style.setProperty('--deg', (pct * 3.6) + 'deg');
+  $('correctN').textContent = c;
+  $('wrongN').textContent = w;
+  $('skipN').textContent = s;
+  $('resultTitle').textContent = pct >= 85 ? 'Excellent 🔥' : pct >= 70 ? 'Very good 💪' : pct >= 50 ? 'Good start' : 'Keep practicing';
+  $('resultSub').textContent = c + ' / ' + questions.length + ' correct • ' + pct + '%';
+  const retryBtn = $('retryWrongBtn');
+  if (w + s > 0) {
+    retryBtn.style.display = 'inline-block';
+    retryBtn.textContent = '🔁 Retry wrong (' + (w + s) + ')';
+  } else {
+    retryBtn.style.display = 'none';
+  }
+  buildReview();
+  saveState();
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildReview() {
+  const box = $('reviewList');
+  box.innerHTML = '';
+  questions.forEach((q, i) => {
+    const selected = answers[i];
+    const ok = selected !== null && q.options[selected].orig === q.answer;
+    const d = document.createElement('div');
+    d.className = 'reviewItem ' + (ok ? 'correct' : 'wrong');
+    let h = '<div class="rmeta">Q' + (i + 1) + ' • ' + q.topic + '</div><div class="rstem">' + esc(q.stem) + '</div>';
+    if (selected === null) h += '<div class="ranswer red">Not answered</div>';
+    else if (ok) h += '<div class="ranswer green">✓ ' + esc(q.options[selected].text) + '</div>';
+    else h += '<div class="ranswer"><span class="red">✕ ' + esc(q.options[selected].text) + '</span><br><span class="green">✓ ' + esc(q.options.find(o => o.orig === q.answer).text) + '</span></div>';
+    d.innerHTML = h;
+    box.appendChild(d);
+  });
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+}
+
+(function init() {
+  const state = loadState();
+  if (state && state.questions && state.questions.length && !state.submitted) {
+    resumeQuiz();
+  } else {
+    showHomeWithResume();
+  }
+})();
+</script>
+</body>
+</html>

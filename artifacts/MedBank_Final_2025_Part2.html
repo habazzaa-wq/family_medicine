@@ -1,0 +1,438 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MedBank • Formatives Cardio & Chest (Previous Year + Formative 2)</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#102033;--muted:#6b7a90;--line:#e5eaf1;--primary:#e11d48;--good:#16a34a;--bad:#dc2626;--goodbg:#ecfdf3;--badbg:#fef2f2;--shadow:0 18px 50px rgba(16,32,51,.10)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#fff1f2 0,#f5f7fb 40%,#f7f8fb 100%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+button{font:inherit}
+.app{max-width:1100px;margin:auto;padding:22px 16px 50px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#e11d48,#f43f5e);display:grid;place-items:center;color:#fff;font-weight:900;font-size:23px;box-shadow:0 10px 25px rgba(225,29,72,.25)}
+h1{font-size:20px;margin:0 0 3px}
+.sub{font-size:12px;color:var(--muted)}
+.pill{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-size:12px;color:var(--muted)}
+.hero,.quiz,.result{background:rgba(255,255,255,.94);border:1px solid rgba(229,234,241,.95);border-radius:24px;box-shadow:var(--shadow)}
+.hero{padding:34px 30px;margin-top:18px}
+.hero h2{font-size:34px;line-height:1.1;margin:0 0 10px}
+.hero p{color:var(--muted);max-width:680px;line-height:1.7}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.stat{padding:12px 15px;border:1px solid var(--line);border-radius:15px;background:#fafcff;min-width:110px}
+.stat b{display:block;font-size:19px}
+.stat span{font-size:11px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:0;border-radius:14px;padding:13px 18px;cursor:pointer;font-weight:800;transition:.2s}
+.btn.primary{background:linear-gradient(135deg,#e11d48,#f43f5e);color:#fff;box-shadow:0 10px 25px rgba(225,29,72,.2)}
+.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn:hover{transform:translateY(-1px)}
+.quiz{padding:18px;display:none}
+.barrow{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.progress{height:9px;background:#edf1f6;border-radius:999px;overflow:hidden;flex:1}
+.progress>div{height:100%;background:linear-gradient(90deg,#e11d48,#f43f5e);width:0;transition:.25s}
+.counter{font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap}
+.qcard{border:1px solid var(--line);border-radius:20px;padding:25px;background:#fff}
+.topic{display:inline-flex;padding:6px 10px;border-radius:999px;background:#ffe4e6;color:#be123c;font-size:11px;font-weight:800;margin-bottom:13px}
+.qtext{font-size:20px;line-height:1.55;font-weight:800;margin:0 0 20px}
+.choices{display:grid;gap:11px}
+.choice{border:1.5px solid #dfe5ed;border-radius:16px;padding:15px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:.18s;background:#fff}
+.choice:hover{border-color:#fda4af;background:#fff1f2}
+.choice.selected{border-color:#e11d48;background:#fff1f2;box-shadow:0 0 0 3px rgba(225,29,72,.08)}
+.radio{width:22px;height:22px;border:2px solid #b8c2d1;border-radius:50%;flex:none;display:grid;place-items:center}
+.selected .radio{border-color:#e11d48}
+.selected .radio:after{content:"";width:10px;height:10px;background:#e11d48;border-radius:50%}
+.letter{width:25px;height:25px;border-radius:8px;background:#f0f3f8;display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
+.selected .letter{background:#ffe4e6;color:#be123c}
+.choiceText{line-height:1.55;flex:1}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.nav .btn{min-width:120px}
+.timer{font-variant-numeric:tabular-nums;font-weight:900}
+.result{display:none;padding:30px}
+.score{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ringbox{position:relative;width:150px;height:150px}
+.ring{width:150px;height:150px;border-radius:50%;background:conic-gradient(#e11d48 var(--deg),#e8edf5 0);display:grid;place-items:center}
+.ring:after{content:"";width:116px;height:116px;border-radius:50%;background:#fff;position:absolute;left:17px;top:17px}
+.ringnum{position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-size:30px;font-weight:900}
+.result h2{font-size:30px;margin:0 0 5px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
+.metric{border:1px solid var(--line);border-radius:16px;padding:15px}
+.metric b{font-size:22px}
+.metric small{display:block;color:var(--muted);margin-top:3px}
+.review{margin-top:25px}
+.reviewItem{border:1px solid var(--line);border-radius:17px;padding:17px;margin:10px 0;background:#fff}
+.reviewItem.correct{border-color:#bbf7d0;background:var(--goodbg)}
+.reviewItem.wrong{border-color:#fecaca;background:var(--badbg)}
+.rmeta{font-size:11px;font-weight:900;color:var(--muted);margin-bottom:6px}
+.rstem{font-weight:800;line-height:1.5}
+.ranswer{margin-top:8px;font-size:13px}
+.green{color:var(--good);font-weight:800}
+.red{color:var(--bad);font-weight:800}
+.footnote{margin-top:16px;color:var(--muted);font-size:11px;line-height:1.6}
+.resumeBanner{display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:16px;padding:14px 18px;margin-bottom:16px;font-size:14px;line-height:1.5}
+.resumeBanner strong{color:#be123c}
+@media(max-width:650px){.app{padding:12px 10px 35px}.hero{padding:24px 19px}.hero h2{font-size:27px}.qcard{padding:19px}.qtext{font-size:18px}.metrics{grid-template-columns:1fr}.nav .btn{min-width:0;flex:1}.top .pill{display:none}}
+.feedback{display:none;margin-top:18px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);line-height:1.6}
+.feedback.show{display:block}
+.feedback.good{background:var(--goodbg);border-color:#bbf7d0}
+.feedback.bad{background:var(--badbg);border-color:#fecaca}
+.feedbackTitle{font-weight:900;margin-bottom:4px}
+.feedbackAnswer{font-weight:800}
+.choice.correctChoice{background:var(--goodbg);border-color:#86efac}
+.choice.wrongChoice{background:var(--badbg);border-color:#fca5a5}
+.choice.correctChoice .radio{border-color:var(--good);background:var(--good)}
+.choice.wrongChoice .radio{border-color:var(--bad);background:var(--bad)}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <h1>MedBank</h1>
+        <div class="sub">Final 2025 • Questions 31-60</div>
+      </div>
+    </div>
+    <div class="pill" id="totalPill">30 questions</div>
+  </div>
+
+  <section id="home" class="hero">
+    <div class="topic">FORMATIVES — CARDIO & CHEST</div>
+    <h2>Previous Year + Formative 2</h2>
+    <p>أسئلة من Formatives Cardio &amp; Chest previous year + Formative 2 Cardio. تم تطبيق التصحيحات المطلوبة (Q3/8/11/16 Cardio + Q7 Chest). التقدم بيتحفظ تلقائيًا.</p>
+    <div id="resumeBanner" class="resumeBanner"></div>
+    <div class="stats">
+      <div class="stat"><b id="statN">48</b><span>Questions</span></div>
+      <div class="stat"><b>∞</b><span>Attempts</span></div>
+      <div class="stat"><b>⏱</b><span>Timer</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz(false)">🚀 Start Exam</button>
+      <button class="btn secondary" onclick="startQuiz(true)">🔀 Fresh shuffle</button>
+      <button class="btn secondary" id="resumeBtn" style="display:none" onclick="resumeQuiz()">▶ Continue last attempt</button>
+    </div>
+  </section>
+
+  <section id="quiz" class="quiz">
+    <div class="barrow">
+      <div class="timer" id="timer">00:00</div>
+      <div class="progress"><div id="progressFill"></div></div>
+      <div class="counter" id="counter">1 / 48</div>
+    </div>
+    <div class="qcard">
+      <div class="topic" id="qtopic">Cardio</div>
+      <h2 class="qtext" id="qtext"></h2>
+      <div class="choices" id="choices"></div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+    <div class="nav">
+      <button class="btn secondary" onclick="prevQ()">← Previous</button>
+      <button id="nextBtn" class="btn primary" onclick="nextQ()">Check Answer →</button>
+      <button class="btn primary" onclick="submitQuiz()">Submit ✓</button>
+    </div>
+  </section>
+
+  <section id="result" class="result">
+    <div class="score">
+      <div class="ringbox">
+        <div class="ring" id="ring"></div>
+        <div class="ringnum" id="scoreNum">0%</div>
+      </div>
+      <div>
+        <div class="topic">RESULT</div>
+        <h2 id="resultTitle">Your result</h2>
+        <div id="resultSub" class="sub"></div>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><b id="correctN">0</b><small>Correct</small></div>
+      <div class="metric"><b id="wrongN">0</b><small>Wrong</small></div>
+      <div class="metric"><b id="skipN">0</b><small>Unanswered</small></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz(true)">🔄 New shuffled attempt</button>
+      <button class="btn secondary" id="retryWrongBtn" style="display:none" onclick="retryWrong()">🔁 Retry wrong / unanswered only</button>
+      <button class="btn secondary" onclick="location.reload()">🏠 Home</button>
+    </div>
+    <div class="review" id="review"></div>
+    <div class="footnote">Answers follow the corrected keys you provided. Progress is stored in this browser only (localStorage).</div>
+  </section>
+</main>
+
+<script>
+const STORAGE_KEY = "medbank_final_2025_part2";
+
+const BANK = [
+  {topic:"Cardio",stem:"Which of the following is a cause of orthopnoea in patients with left ventricular failure?",options:["Increased venous return when lying flat","Decreased venous return when lying flat","Right ventricular dysfunction","Aortic stenosis"],answer:0,id:1},
+  {topic:"Cardio",stem:"Collapsing pulse is commonly associated with which of the following conditions?",options:["Aortic stenosis","Atrial fibrillation","Cardiac tamponade","Aortic regurgitation"],answer:3,id:2},
+  {topic:"Cardio",stem:"Which of the following is a potential cause of secondary aortic regurgitation?",options:["Aortic dissection","Atherosclerosis","Pulmonary embolism","Hypertension"],answer:0,id:3},
+  {topic:"Cardio",stem:"A 30-year-old male is noted to have a high-pitched pansystolic murmur at the apex that radiates to the axilla. There is a mid-diastolic rumble at the apex. What is the most likely cause of this murmur?",options:["Tricuspid regurgitation","Mitral stenosis","Ventricular septal defect","Mitral regurgitation"],answer:3,id:4},
+  {topic:"Cardio",stem:"Which of the following is a characteristic feature of Janeway lesions?",options:["Painful nodules on the palms, soles and distal phalanges","Painless flat lesions on the palms, soles and distal phalanges","Itchy, raised lesions on the fingertips","Painless raised lesions on the palms of the hand"],answer:1,id:5},
+  {topic:"Cardio",stem:"Which of the following is a common cause of ventricular septal defect?",options:["Congenital heart defect","Rheumatic fever","Endocarditis","Aortic stenosis"],answer:0,id:6},
+  {topic:"Cardio",stem:"What is the underlying cause of the fourth heart sound?",options:["Atrial contraction","Rapid ventricular filling","Blood flow across a stenotic valve","Relaxation of the ventricles"],answer:0,id:7},
+  {topic:"Cardio",stem:"Which of the following is a common symptom in patients with right ventricular failure?",options:["Palpitations","Dyspnoea on exertion","Peripheral oedema","Haemoptysis"],answer:2,id:8},
+  {topic:"Cardio",stem:"Which of the following treatments is typically recommended for severe symptomatic aortic regurgitation?",options:["Pharmacologic management","Balloon valvuloplasty","Aortic valve replacement","Coronary artery bypass grafting"],answer:2,id:9},
+  {topic:"Cardio",stem:"Which of the following conditions is a cause of pulsus paradoxus?",options:["Cardiac tamponade","Aortic stenosis","Mitral regurgitation","Aortic regurgitation"],answer:0,id:10},
+  {topic:"Cardio",stem:"What is a potential cause of carotid bruits?",options:["Atherosclerosis of the carotid artery","Aortic stenosis","Mitral regurgitation","Pulmonary embolism"],answer:0,id:11},
+  {topic:"Cardio",stem:"PR interval tends to become longer with every succeeding P wave not followed by a QRS is observed in:",options:["First-Degree Atrioventricular Block","Second-Degree Atrioventricular Block, Type I (Wenckebach)","Second-Degree Atrioventricular Block, Type II","Third-Degree Atrioventricular Block"],answer:1,id:12},
+  {topic:"Cardio",stem:"What is the primary mechanism by which atherosclerosis leads to coronary artery disease (CAD)?",options:["Infection of the heart muscle","Accumulation of plaques in the coronary arteries","Inflammation of the heart valves","Overproduction of red blood cells"],answer:1,id:13},
+  {topic:"Chest",stem:"Which of the following is used to reduce friction between the layers of membranes surrounding the heart?",options:["Synovial fluid","Pleural fluid","Pericardial fluid","Capillary endothelium"],answer:2,id:14},
+  {topic:"Cardio",stem:"The apex of the heart is normally pointed:",options:["To the left of the midline","To the right of the midline","It is different for males and females","Posteriorly"],answer:0,id:15},
+  {topic:"Physio",stem:"Why is the pulmonary artery BP lower than the systemic arterial BP?",options:["The output of the right ventricle is less than that of the left ventricle","The pulmonary resistance is less than the systemic resistance","The left ventricular wall is thicker than that of the right ventricle","The aorta is more elastic than the pulmonary artery"],answer:1,id:16},
+  {topic:"Physio",stem:"In what phase of the cardiac cycle is left ventricular volume unchanged?",options:["Rapid filling","Isovolumetric contraction","Ventricular ejection","Atrial systole"],answer:1,id:17},
+  {topic:"Chest Pharma",stem:"Which beta-2 agonist provides 24-hour bronchodilation, allowing once daily dosing?",options:["Albuterol","Salmeterol","Terbutaline","Indacaterol"],answer:3,id:18},
+  {topic:"Chest Pharma",stem:"Which of the following bronchodilators is a long-acting beta-2 agonist and commonly used alongside ICS in asthma or COPD?",options:["Albuterol","Salmeterol","Terbutaline","Salbutamol"],answer:1,id:19},
+  {topic:"Chest",stem:"Which of the following lung tumors has a tendency to undergo necrosis and cavitations?",options:["Adenocarcinoma","Bronchioalveolar carcinoma","Carcinoid","Squamous cell carcinoma"],answer:3,id:20},
+  {topic:"Patho",stem:"What is the gross feature of benign hypertension on kidney?",options:["Small contracted kidney","Enlarged kidney with petechial hemorrhage","Flea-bitten kidney","Enlarged vacuolated kidney"],answer:0,id:21},
+  {topic:"Cardio",stem:"A 70-year-old male has a decrescendo early diastolic murmur heard best at the left lower sternal border. The murmur increases with expiration. Most likely cause?",options:["Aortic regurgitation","Pulmonary regurgitation","Mitral stenosis","Aortic stenosis"],answer:0,id:22},
+  {topic:"Cardio",stem:"A 65-year-old male has a harsh ejection systolic murmur heard best at the second right intercostal space with radiation to the neck. The murmur decreases with Valsalva and increases with squatting. Most likely cause?",options:["Aortic stenosis","Hypertrophic cardiomyopathy","Mitral regurgitation","Pulmonary stenosis"],answer:0,id:23},
+  {topic:"Cardio",stem:"A 24-year-old male has a harsh ejection systolic murmur heard best at the left lower sternal border. The murmur increases with Valsalva and decreases with squatting. Most likely cause?",options:["Aortic stenosis","Hypertrophic cardiomyopathy","Mitral regurgitation","Ventricular septal defect"],answer:1,id:24},
+  {topic:"Chest",stem:"Which of the following is most frequently observed in the posterior mediastinum?",options:["Neurogenic tumors","Mesothelioma","Thymomas","Cholangiocarcinoma"],answer:0,id:25},
+  {topic:"Chest",stem:"Which of the following is the most common cause of pneumomediastinum in older children and teenagers?",options:["Asthma","Adenoidectomy","Trauma","Boerhaave syndrome"],answer:0,id:26},
+  {topic:"Cardio",stem:"Which of the following is the appropriate first-line treatment for the management of cyanosis as a result of heart disease in neonates?",options:["Indomethacin administration","Prostaglandin E1 infusion","Nitric oxide","Surfactant"],answer:1,id:27},
+  {topic:"Chest",stem:"Which of the following is not diagnosed via Spirometry?",options:["Pulmonary fibrosis","Bronchial asthma","COPD","Pneumonia"],answer:3,id:28},
+  {topic:"Cardio",stem:"Which of the following would not be an expected sign of right-sided congestive heart failure?",options:["Prominent jugular vein","Hepatomegaly","Bilateral pitting lower limb edema","Bilateral fine basal crepitation"],answer:3,id:29},
+  {topic:"Cardio",stem:"The following is recognized cause of dilated cardiomyopathy:",options:["Systemic sclerosis","Polymyositis","Haemochromatosis","SLE"],answer:2,id:30},
+];
+
+
+
+
+
+
+
+
+
+
+let questions = [], answers = [], idx = 0, start = 0, timer = null, submitted = false, isRetryMode = false;
+const $ = id => document.getElementById(id);
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function saveState() {
+  if (!questions.length) return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      questions, answers, idx, start, submitted, isRetryMode, savedAt: Date.now()
+    }));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function clearState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function showHomeWithResume() {
+  const state = loadState();
+  const banner = $('resumeBanner');
+  const resumeBtn = $('resumeBtn');
+  if (state && state.questions && state.questions.length && !state.submitted) {
+    const done = state.answers.filter(a => a !== null).length;
+    banner.style.display = 'block';
+    banner.innerHTML = '<strong>Last attempt found</strong> — Question ' + (state.idx + 1) + ' of ' + state.questions.length + ' (' + done + ' answered).';
+    resumeBtn.style.display = 'inline-block';
+  } else {
+    banner.style.display = 'none';
+    resumeBtn.style.display = 'none';
+  }
+}
+
+function startQuiz(forceFresh) {
+  clearInterval(timer);
+  submitted = false;
+  isRetryMode = false;
+  idx = 0;
+  start = Date.now();
+  if (forceFresh) clearState();
+  questions = shuffle(BANK.map(q => ({
+    ...q,
+    options: shuffle(q.options.map((text, i) => ({ text, orig: i }))),
+    revealed: false
+  })));
+  answers = Array(questions.length).fill(null);
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  $('totalPill').textContent = questions.length + ' questions';
+  render();
+  timer = setInterval(updateTimer, 1000);
+  saveState();
+}
+
+function resumeQuiz() {
+  const state = loadState();
+  if (!state || !state.questions) return startQuiz(false);
+  questions = state.questions;
+  answers = state.answers;
+  idx = state.idx || 0;
+  start = state.start || Date.now();
+  submitted = false;
+  isRetryMode = !!state.isRetryMode;
+  $('home').style.display = 'none';
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  const s = Math.floor((Date.now() - start) / 1000);
+  const m = String(Math.floor(s / 60)).padStart(2, '0');
+  const sec = String(s % 60).padStart(2, '0');
+  $('timer').textContent = m + ':' + sec;
+}
+
+function render() {
+  const q = questions[idx];
+  $('qtopic').textContent = q.topic;
+  $('qtext').textContent = q.stem;
+  $('counter').textContent = (idx + 1) + ' / ' + questions.length;
+  $('progressFill').style.width = ((idx + 1) / questions.length * 100) + '%';
+  const letters = ['A', 'B', 'C', 'D', 'E'];
+  $('choices').innerHTML = q.options.map((opt, i) => {
+    const sel = answers[idx] === i ? ' selected' : '';
+    let extra = '';
+    if (q.revealed) {
+      if (opt.orig === q.answer) extra = ' correctChoice';
+      else if (answers[idx] === i) extra = ' wrongChoice';
+    }
+    return `<div class="choice${sel}${extra}" onclick="selectChoice(${i})">
+      <div class="radio"></div>
+      <div class="letter">${letters[i]}</div>
+      <div class="choiceText">${opt.text}</div>
+    </div>`;
+  }).join('');
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  if (q.revealed) {
+    const correct = answers[idx] !== null && q.options[answers[idx]].orig === q.answer;
+    fb.classList.add('show', correct ? 'good' : 'bad');
+    fb.innerHTML = `<div class="feedbackTitle">${correct ? '✓ Correct' : '✗ Incorrect'}</div>
+      <div class="feedbackAnswer">Answer: ${q.options.find(o => o.orig === q.answer).text}</div>`;
+  }
+  $('nextBtn').textContent = q.revealed ? (idx === questions.length - 1 ? 'Finish →' : 'Next →') : 'Check Answer →';
+  saveState();
+}
+
+function selectChoice(i) {
+  if (questions[idx].revealed) return;
+  answers[idx] = i;
+  render();
+}
+
+function nextQ() {
+  const q = questions[idx];
+  if (!q.revealed) {
+    if (answers[idx] === null) return;
+    q.revealed = true;
+    render();
+    return;
+  }
+  if (idx < questions.length - 1) {
+    idx++;
+    render();
+  } else {
+    submitQuiz();
+  }
+}
+
+function prevQ() {
+  if (idx > 0) {
+    idx--;
+    render();
+  }
+}
+
+function submitQuiz() {
+  clearInterval(timer);
+  submitted = true;
+  saveState();
+  let correct = 0, wrong = 0, skip = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === null) skip++;
+    else if (q.options[answers[i]].orig === q.answer) correct++;
+    else wrong++;
+  });
+  const pct = Math.round(correct / questions.length * 100);
+  $('quiz').style.display = 'none';
+  $('result').style.display = 'block';
+  $('scoreNum').textContent = pct + '%';
+  $('ring').style.setProperty('--deg', (pct * 3.6) + 'deg');
+  $('correctN').textContent = correct;
+  $('wrongN').textContent = wrong;
+  $('skipN').textContent = skip;
+  $('resultTitle').textContent = pct >= 70 ? 'Great job!' : pct >= 50 ? 'Keep practicing' : 'Review needed';
+  $('resultSub').textContent = correct + ' / ' + questions.length + ' correct';
+  $('retryWrongBtn').style.display = (wrong + skip > 0) ? 'inline-block' : 'none';
+  buildReview();
+  clearState();
+}
+
+function buildReview() {
+  const rev = $('review');
+  rev.innerHTML = '<h3 style="margin:20px 0 10px">Full Review</h3>';
+  questions.forEach((q, i) => {
+    const ans = answers[i];
+    const isCorrect = ans !== null && q.options[ans].orig === q.answer;
+    const userAns = ans === null ? '— Unanswered' : q.options[ans].text;
+    const correctAns = q.options.find(o => o.orig === q.answer).text;
+    rev.innerHTML += `<div class="reviewItem ${isCorrect ? 'correct' : 'wrong'}">
+      <div class="rmeta">${q.topic} • Q${i + 1}</div>
+      <div class="rstem">${q.stem}</div>
+      <div class="ranswer">
+        ${isCorrect ? '<span class="green">✓ ' + userAns + '</span>' :
+          '<span class="red">✗ Your answer: ' + userAns + '</span><br><span class="green">Correct: ' + correctAns + '</span>'}
+      </div>
+    </div>`;
+  });
+}
+
+function retryWrong() {
+  const wrongQs = questions.filter((q, i) => {
+    const ans = answers[i];
+    return ans === null || q.options[ans].orig !== q.answer;
+  }).map(q => ({
+    ...q,
+    options: shuffle(q.options.map(o => ({ text: o.text, orig: o.orig }))),
+    revealed: false
+  }));
+  if (!wrongQs.length) return;
+  questions = shuffle(wrongQs);
+  answers = Array(questions.length).fill(null);
+  idx = 0;
+  start = Date.now();
+  submitted = false;
+  isRetryMode = true;
+  $('result').style.display = 'none';
+  $('quiz').style.display = 'block';
+  render();
+  timer = setInterval(updateTimer, 1000);
+  saveState();
+}
+
+// Auto-resume check on load
+document.addEventListener('DOMContentLoaded', () => {
+  $('statN').textContent = BANK.length;
+  $('totalPill').textContent = BANK.length + ' questions';
+  showHomeWithResume();
+});
+</script>
+</body>
+</html>
