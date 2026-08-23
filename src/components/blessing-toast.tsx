@@ -9,8 +9,8 @@ const PHRASES = [
 ];
 
 const SHOW_FOR = 5000;
-const INTERVAL = 120000;
-const FIRST_DELAY = 20000;
+const INTERVAL = 60000;
+const FIRST_DELAY = 15000;
 
 export function BlessingToast() {
   const [message, setMessage] = useState<string | null>(null);
@@ -48,7 +48,7 @@ export function BlessingToast() {
       aria-live="polite"
       dir="rtl"
       className={cnToast(
-        "fixed bottom-4 left-4 z-50 max-w-[min(90vw,22rem)] rounded-[16px] border border-line bg-bg-elevated/95 px-4 py-3 shadow-lg shadow-black/10 backdrop-blur-sm transition-all duration-300",
+        "fixed bottom-4 right-4 z-50 max-w-[min(90vw,22rem)] rounded-[16px] border border-line bg-bg-elevated/95 px-4 py-3 shadow-lg shadow-black/10 backdrop-blur-sm transition-all duration-300",
         visible ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
       )}
     >
