@@ -47,33 +47,49 @@ function ExamLayout() {
         </p>
       </header>
 
-      <nav className="mb-6 grid grid-cols-2 gap-2 rounded-[18px] border border-line bg-bg-elevated p-1.5">
-        <Link
-          to="/exam/$examId/mcq"
-          params={{ examId }}
-          className={cn(
-            "flex min-h-12 items-center justify-center gap-2 rounded-[12px] text-sm font-medium",
-            onMcq ? "bg-accent text-accent-fg" : "text-ink hover:bg-accent-soft",
-          )}
-        >
-          <FileQuestion className="size-4" />
-          اختياري
-        </Link>
-        <Link
-          to="/exam/$examId/essay"
-          params={{ examId }}
-          className={cn(
-            "flex min-h-12 items-center justify-center gap-2 rounded-[12px] text-sm font-medium",
-            onEssay ? "bg-accent text-accent-fg" : "text-ink hover:bg-accent-soft",
-          )}
-        >
-          <PenLine className="size-4" />
-          مقالي
-        </Link>
-      </nav>
+      {exam.essay.length > 0 ? (
+        <nav className="mb-6 grid grid-cols-2 gap-2 rounded-[18px] border border-line bg-bg-elevated p-1.5">
+          <Link
+            to="/exam/$examId/mcq"
+            params={{ examId }}
+            className={cn(
+              "flex min-h-12 items-center justify-center gap-2 rounded-[12px] text-sm font-medium",
+              onMcq ? "bg-accent text-accent-fg" : "text-ink hover:bg-accent-soft",
+            )}
+          >
+            <FileQuestion className="size-4" />
+            اختياري
+          </Link>
+          <Link
+            to="/exam/$examId/essay"
+            params={{ examId }}
+            className={cn(
+              "flex min-h-12 items-center justify-center gap-2 rounded-[12px] text-sm font-medium",
+              onEssay ? "bg-accent text-accent-fg" : "text-ink hover:bg-accent-soft",
+            )}
+          >
+            <PenLine className="size-4" />
+            مقالي
+          </Link>
+        </nav>
+      ) : onEssay ? null : (
+        <nav className="mb-6 grid grid-cols-1 gap-2 rounded-[18px] border border-line bg-bg-elevated p-1.5">
+          <Link
+            to="/exam/$examId/mcq"
+            params={{ examId }}
+            className={cn(
+              "flex min-h-12 items-center justify-center gap-2 rounded-[12px] text-sm font-medium",
+              !onEssay ? "bg-accent text-accent-fg" : "text-ink hover:bg-accent-soft",
+            )}
+          >
+            <FileQuestion className="size-4" />
+            الاختياري · {exam.mcq.length} سؤال
+          </Link>
+        </nav>
+      )}
 
-      {onHub && (
-        <div className="grid gap-3 sm:grid-cols-2">
+      {onHub && !onEssay && (
+        <div className={cn("grid gap-3", exam.essay.length > 0 ? "sm:grid-cols-2" : "sm:grid-cols-1")}>
           <Link
             to="/exam/$examId/mcq"
             params={{ examId }}
@@ -85,17 +101,19 @@ function ExamLayout() {
               {exam.mcq.length} سؤال — اختبار تفاعلي مع تصحيح فوري بعد التسليم وإعادة الخطأ.
             </p>
           </Link>
-          <Link
-            to="/exam/$examId/essay"
-            params={{ examId }}
-            className="rounded-[24px] border border-line bg-bg-elevated p-5 hover:border-accent"
-          >
-            <PenLine className="size-5 text-accent" />
-            <h2 className="mt-3 font-display text-lg font-semibold">المقالي</h2>
-            <p className="mt-1 text-sm text-muted">
-              {exam.essay.length} سؤال مع الإجابة النموذجية معروضة بشكل واضح.
-            </p>
-          </Link>
+          {exam.essay.length > 0 && (
+            <Link
+              to="/exam/$examId/essay"
+              params={{ examId }}
+              className="rounded-[24px] border border-line bg-bg-elevated p-5 hover:border-accent"
+            >
+              <PenLine className="size-5 text-accent" />
+              <h2 className="mt-3 font-display text-lg font-semibold">المقالي</h2>
+              <p className="mt-1 text-sm text-muted">
+                {exam.essay.length} سؤال مع الإجابة النموذجية معروضة بشكل واضح.
+              </p>
+            </Link>
+          )}
         </div>
       )}
 

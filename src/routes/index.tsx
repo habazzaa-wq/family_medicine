@@ -18,10 +18,10 @@ const CATEGORY_META: Record<
     icon: Stethoscope,
   },
   git: {
-    label: "الجهاز الهضمي",
-    en: "GIT · Gastrointestinal",
-    title: "امتحانات الجهاز الهضمي",
-    hint: "نهاية الترم، السمستر، الفورماتيفات، وجميع امتحانات الأقسام.",
+    label: "GIT",
+    en: "Gastrointestinal Tract",
+    title: "امتحانات GIT",
+    hint: "نهاية الترم، السمستر، الفورماتيفات، وبنك الأسئلة.",
     icon: ListChecks,
   },
 };
