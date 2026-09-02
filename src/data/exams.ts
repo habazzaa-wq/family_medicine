@@ -13,8 +13,11 @@ export type Essay = {
   extra?: string;
 };
 
+export type ExamCategory = "hm" | "git";
+
 export type Exam = {
   id: string;
+  category: ExamCategory;
   year: string;
   titleAr: string;
   titleEn: string;
@@ -24,9 +27,10 @@ export type Exam = {
   essay: Essay[];
 };
 
-export const EXAMS: Exam[] = [
+const HOSPITAL_EXAMS: Exam[] = [
   {
     id: "family-medicine",
+    category: "hm",
     year: "محاضرة",
     titleAr: "طب الأسرة — كسر الأخبار السيئة",
     titleEn: "Family Medicine · Breaking Bad News",
@@ -88,6 +92,7 @@ export const EXAMS: Exam[] = [
   },
   {
     id: "hm-2022",
+    category: "hm",
     year: "2022",
     titleAr: "إدارة الصحة — امتحان 2022",
     titleEn: "Health Management · 4th year 2022",
@@ -145,6 +150,7 @@ export const EXAMS: Exam[] = [
   },
   {
     id: "hm-2024",
+    category: "hm",
     year: "2024",
     titleAr: "إدارة المستشفيات — نهاية الترم 2024",
     titleEn: "Hospital Management · End of Semester 2023/2024 · Form B",
@@ -446,6 +452,7 @@ export const EXAMS: Exam[] = [
   },
   {
     id: "hm-2023",
+    category: "hm",
     year: "2023",
     titleAr: "إدارة المستشفيات — 2023",
     titleEn: "Hospital Management · 2023 · Form A",
@@ -731,6 +738,7 @@ export const EXAMS: Exam[] = [
   },
   {
     id: "hm-2025",
+    category: "hm",
     year: "2025",
     titleAr: "فاينال إدارة المستشفيات 2025",
     titleEn: "Final Hospital Management · August 2024/2025",
@@ -990,6 +998,10 @@ export const EXAMS: Exam[] = [
     ],
   },
 ];
+
+import { GIT_EXAMS } from "./git-exams";
+
+export const EXAMS: Exam[] = [...HOSPITAL_EXAMS, ...GIT_EXAMS];
 
 export function getExam(id: string) {
   return EXAMS.find((e) => e.id === id);

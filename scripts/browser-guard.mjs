@@ -34,7 +34,17 @@ export function checkedUrl(url) {
 export function checkedOutputPath(target, allowedDirs, label = "screenshot") {
   // Resolve first so `..` cannot slip past the prefix check.
   const abs = resolve(target);
-  const allowed = allowedDirs.some((dir) => abs.startsWith(dir.endsWith(sep) ? dir : dir + sep));
+  // Local (Windows) dev checkouts resolve POSIX roots like `/workspace` onto a
+  // drive root; `BROWSER_SCREENSHOT_ROOT` lets the agent pin the real
+  // workspace there without touching the Linux/Vercel default.
+  const extra = (process.env.BROWSER_SCREENSHOT_ROOT || "")
+    .split(/[;|]/)
+    .map((dir) => dir.trim())
+    .filter(Boolean)
+    .map((dir) => resolve(dir));
+  const allowed = [...extra, ...allowedDirs].some((dir) =>
+    abs.startsWith(dir.endsWith(sep) ? dir : dir + sep),
+  );
   if (!allowed) {
     fail(`${label} path must be under ${allowedDirs.join(" or ")}, got ${abs}`);
   }
